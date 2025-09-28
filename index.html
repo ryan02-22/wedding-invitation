@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan - ayu & fatur</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Opening Screen -->
+    <div id="opening-screen">
+        <div class="opening-content">
+            <div class="envelope">
+                <div class="envelope-front">
+                    <div class="envelope-heart">💌</div>
+                    <p class="envelope-text">Undangan Pernikahan</p>
+                </div>
+                <div class="envelope-back"></div>
+            </div>
+            <h1 class="opening-title">ayu & fatur</h1>
+            <p class="opening-subtitle">Klik untuk membuka undangan</p>
+            <button class="open-invitation-btn" onclick="openInvitation()">
+                <i class="fas fa-envelope-open"></i>
+                Buka Undangan
+            </button>
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-hearts">
+                <i class="fas fa-heart"></i>
+                <i class="fas fa-heart"></i>
+                <i class="fas fa-heart"></i>
+            </div>
+            <p>Memuat Undangan...</p>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="couple-names">Fatur & simbetr</h1>
+                <p class="wedding-date">Sabtu, 15 Februari 2025</p>
+                <div class="decorative-line"></div>
+            </div>
+        </header>
+
+        <!-- Invitation Card -->
+        <div class="invitation-card">
+            <div class="card-content">
+                <div class="opening-text">
+                    <p>Dengan memohon rahmat dan ridho Allah SWT,</p>
+                    <p>kami bermaksud menyelenggarakan pernikahan putra-putri kami:</p>
+                </div>
+
+                <div class="bride-groom">
+                    <div class="bride">
+                        <h2>Fatur</h2>
+                        <p>Putra dari Bapak Ahmad & Ibu Siti</p>
+                    </div>
+                    <div class="ampersand">&</div>
+                    <div class="groom">
+                        <h2>simbet</h2>
+                        <p>Putri dari Bapak Budi & Ibu Rina</p>
+                    </div>
+                </div>
+
+                <div class="wedding-details">
+                    <div class="detail-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <h3>Tanggal</h3>
+                            <p>Sabtu, 15 Februari 2025</p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h3>Waktu</h3>
+                            <p>08.00 - 12.00 WIB</p>
+                            <small id="current-time"></small>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h3>Lokasi</h3>
+                            <p><strong>Masjid Agung Slawi</strong><br>
+                            Jl. Procot Slawi, Tegal<br>
+                            <small>📍 <a href="https://maps.google.com/?q=-6.9788,109.1403" target="_blank">Lihat di Google Maps</a></small></p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h3>Kontak</h3>
+                            <p>📞 0812-3456-7890 (Ahmad)<br>
+                            📞 0813-4567-8901 (Budi)<br>
+                            📱 <a href="https://wa.me/6281234567890" target="_blank">WhatsApp</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rsvp-section">
+                    <h3>Konfirmasi Kehadiran</h3>
+                    <p>Mohon konfirmasi kehadiran Anda sebelum tanggal 10 Februari 2026</p>
+                    
+                    <!-- Form Nama Tamu -->
+                    <div class="guest-form">
+                        <input type="text" id="guest-name" placeholder="Masukkan nama lengkap Anda" required>
+                        <input type="number" id="guest-count" placeholder="Jumlah tamu" min="1" max="10" value="1">
+                    </div>
+                    
+                    <div class="rsvp-buttons">
+                        <button class="rsvp-btn confirm" onclick="confirmAttendance('hadir')">
+                            <i class="fas fa-check"></i> Hadir
+                        </button>
+                        <button class="rsvp-btn decline" onclick="confirmAttendance('tidak-hadir')">
+                            <i class="fas fa-times"></i> Tidak Hadir
+                        </button>
+                    </div>
+                    
+                    <!-- Transfer Uang untuk yang Tidak Hadir -->
+                    <div class="transfer-section" id="transfer-section" style="display: none;">
+                        <h4>💝 Bantuan untuk Pasangan</h4>
+                        <p>Jika Anda tidak bisa hadir, bantuan Anda sangat berarti untuk kami</p>
+                        <div class="transfer-options">
+                            <div class="transfer-option">
+                                <h5>Bank Transfer</h5>
+                                <p><strong>BCA:</strong> 1234567890 (Ayu)</p>
+                                <p><strong>Mandiri:</strong> 0987654321 (Fatur)</p>
+                                <button class="copy-btn" onclick="copyToClipboard('1234567890')">📋 Copy BCA</button>
+                                <button class="copy-btn" onclick="copyToClipboard('0987654321')">📋 Copy Mandiri</button>
+                            </div>
+                            <div class="transfer-option">
+                                <h5>E-Wallet</h5>
+                                <p><strong>DANA:</strong> 081234567890</p>
+                                <p><strong>OVO:</strong> 081234567890</p>
+                                <button class="copy-btn" onclick="copyToClipboard('081234567890')">📋 Copy DANA</button>
+                                <button class="copy-btn" onclick="copyToClipboard('081234567890')">📋 Copy OVO</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="closing-text">
+                    <p>Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.</p>
+                    <p>Atas kehadiran dan doa restu, kami ucapkan terima kasih.</p>
+                    <p class="signature">Wassalamualaikum Wr. Wb.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="gallery-section">
+            <h2>Momen Berharga</h2>
+            <div class="gallery-container">
+                <!-- Horizontal Row -->
+                <div class="gallery-row horizontal">
+                    <div class="gallery-item wide">
+                        <img src="IMG_1831.JPG" alt="Pre Wedding 1">
+                        <div class="gallery-overlay">
+                            <h3>Pre Wedding Session</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="2.JPG" alt="Engagement">
+                        <div class="gallery-overlay">
+                            <h3>Engagement</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Vertical Row -->
+                <div class="gallery-row vertical">
+                    <div class="gallery-item">
+                        <img src="bdb3734d-4256-459f-abb8-81a725efc45d.jpg" alt="Love Story">
+                        <div class="gallery-overlay">
+                            <h3>Love Story</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="c8aae3b3-9673-4629-8a79-b5bf69c3dc21.JPG" alt="Family">
+                        <div class="gallery-overlay">
+                            <h3>Family</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://via.placeholder.com/300x200/feca57/ffffff?text=Memories" alt="Memories">
+                        <div class="gallery-overlay">
+                            <h3>Memories</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mixed Row -->
+                <div class="gallery-row mixed">
+                    <div class="gallery-item">
+                        <img src="https://via.placeholder.com/300x250/ff9ff3/ffffff?text=Couple" alt="Couple">
+                        <div class="gallery-overlay">
+                            <h3>Couple</h3>
+                        </div>
+                    </div>
+                    <div class="gallery-item wide">
+                        <img src="https://via.placeholder.com/600x250/54a0ff/ffffff?text=Wedding+Preparation" alt="Wedding Preparation">
+                        <div class="gallery-overlay">
+                            <h3>Wedding Preparation</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Countdown Section -->
+        <div class="countdown-section">
+            <h2>Menuju Hari Bahagia</h2>
+            <div class="countdown-timer">
+                <div class="time-unit">
+                    <span id="days">00</span>
+                    <label>Hari</label>
+                </div>
+                <div class="time-unit">
+                    <span id="hours">00</span>
+                    <label>Jam</label>
+                </div>
+                <div class="time-unit">
+                    <span id="minutes">00</span>
+                    <label>Menit</label>
+                </div>
+                <div class="time-unit">
+                    <span id="seconds">00</span>
+                    <label>Detik</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ucapan Selamat Section -->
+        <div class="wishes-section">
+            <h2>💝 Ucapan Selamat</h2>
+            <p>Bagikan kebahagiaan dan doa terbaik untuk pasangan</p>
+            
+            <div class="wishes-form">
+                <input type="text" id="wisher-name" placeholder="Nama Anda" required>
+                <textarea id="wish-message" placeholder="Tuliskan ucapan selamat dan doa terbaik untuk Ayu & Fatur..." rows="4" required></textarea>
+                <button class="submit-wish-btn" onclick="submitWish()">
+                    <i class="fas fa-heart"></i> Kirim Ucapan
+                </button>
+            </div>
+            
+            <div class="wishes-display" id="wishes-display">
+                <!-- Ucapan akan ditampilkan di sini -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2025 Undangan Pernikahan AYU & FATUR</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Floating Hearts Animation -->
+    <div class="floating-hearts"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
