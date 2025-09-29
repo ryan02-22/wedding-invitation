@@ -77,16 +77,24 @@ function openInvitation() {
     // Play opening music
     playOpeningMusic();
     
+    // Add loading screen active class to body
+    document.body.classList.add('loading-screen-active');
+    
     // Show loading screen immediately
     loadingScreen.classList.remove('hidden');
     loadingScreen.style.display = 'flex';
     loadingScreen.style.opacity = '1';
     loadingScreen.style.visibility = 'visible';
-    loadingScreen.style.zIndex = '99999';
+    loadingScreen.style.zIndex = '999999';
     loadingScreen.style.pointerEvents = 'auto';
     loadingScreen.style.background = '#F5F5F5';
     loadingScreen.style.backgroundColor = '#F5F5F5';
     loadingScreen.style.backgroundImage = 'none';
+    loadingScreen.style.position = 'fixed';
+    loadingScreen.style.top = '0';
+    loadingScreen.style.left = '0';
+    loadingScreen.style.width = '100vw';
+    loadingScreen.style.height = '100vh';
     
     // Start realistic loading animation immediately
     setTimeout(() => {
@@ -128,6 +136,11 @@ function startRealisticLoading() {
         loadingScreen.style.background = '#F5F5F5';
         loadingScreen.style.backgroundColor = '#F5F5F5';
         loadingScreen.style.backgroundImage = 'none';
+        loadingScreen.style.position = 'fixed';
+        loadingScreen.style.top = '0';
+        loadingScreen.style.left = '0';
+        loadingScreen.style.width = '100%';
+        loadingScreen.style.height = '100%';
     }
     
     // Ensure progress elements exist and reset them
@@ -175,6 +188,8 @@ function startRealisticLoading() {
                 loadingScreen.style.display = 'none';
                         loadingScreen.style.visibility = 'hidden';
                         loadingScreen.style.zIndex = '-1'; // Move behind content
+                        // Remove loading screen active class from body
+                        document.body.classList.remove('loading-screen-active');
                 // Start all other functions
                 startMainFeatures();
                         // Reset loading flag
@@ -188,9 +203,15 @@ function startRealisticLoading() {
 
 // Start main features after opening screen
 function startMainFeatures() {
-    // Ensure loading screen is completely hidden
+    // Only hide loading screen if it's not currently active
     const loadingScreen = document.getElementById('loading-screen');
-    if (loadingScreen) {
+    if (loadingScreen && !loadingScreen.classList.contains('hidden')) {
+        // Loading screen is still active, don't hide it yet
+        return;
+    }
+    
+    // Ensure loading screen is completely hidden only when it should be
+    if (loadingScreen && loadingScreen.classList.contains('hidden')) {
         loadingScreen.style.display = 'none';
         loadingScreen.style.visibility = 'hidden';
         loadingScreen.style.zIndex = '-1';
