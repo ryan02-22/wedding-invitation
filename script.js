@@ -96,11 +96,13 @@ function openInvitation() {
     // Hide opening screen with animation
     openingScreen.style.opacity = '0';
     openingScreen.style.transform = 'scale(0.8)';
+    openingScreen.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
     
     setTimeout(() => {
         openingScreen.classList.add('hidden');
         openingScreen.style.display = 'none'; // Force hide
-    }, 800);
+        openingScreen.style.zIndex = '-1'; // Move behind content
+    }, 500); // Faster transition
 }
 
 // Realistic Loading Animation
@@ -138,8 +140,8 @@ function startRealisticLoading() {
     
     // Start loading animation immediately
     let progress = 0;
-    const totalDuration = 3000; // 3 seconds total for better visibility
-    const updateInterval = 50; // Update every 50ms (smoother)
+    const totalDuration = 2000; // 2 seconds - balanced duration
+    const updateInterval = 30; // Update every 30ms (smoother)
     
     // Simple and fast loading progression
     const progressIncrement = 100 / (totalDuration / updateInterval);
@@ -167,23 +169,34 @@ function startRealisticLoading() {
         setTimeout(() => {
                 if (loadingScreen) {
             loadingScreen.style.opacity = '0';
+                    loadingScreen.style.transition = 'opacity 0.5s ease-out';
             setTimeout(() => {
                         loadingScreen.classList.add('hidden');
                 loadingScreen.style.display = 'none';
                         loadingScreen.style.visibility = 'hidden';
+                        loadingScreen.style.zIndex = '-1'; // Move behind content
                 // Start all other functions
                 startMainFeatures();
                         // Reset loading flag
                         isLoading = false;
-                    }, 300); // Slower transition for better visibility
+                    }, 500); // Smooth transition
                 }
-            }, 200); // Delay before hiding
+            }, 100); // Quick transition
         }
     }, updateInterval);
 }
 
 // Start main features after opening screen
 function startMainFeatures() {
+    // Ensure loading screen is completely hidden
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        loadingScreen.style.display = 'none';
+        loadingScreen.style.visibility = 'hidden';
+        loadingScreen.style.zIndex = '-1';
+        loadingScreen.style.pointerEvents = 'none';
+    }
+    
     // Scroll to top immediately to ensure page starts at the top
     window.scrollTo({
         top: 0,
