@@ -64,6 +64,13 @@ function openInvitation() {
         return;
     }
     
+    // Scroll to top immediately when opening invitation
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'instant'
+    });
+    
     // Play opening music
     playOpeningMusic();
     
@@ -146,6 +153,13 @@ function startRealisticLoading() {
 
 // Start main features after opening screen
 function startMainFeatures() {
+    // Scroll to top immediately to ensure page starts at the top
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'instant'
+    });
+    
     // Only call updateCountdown once, not in interval
     updateCountdown();
     updateCurrentTime();
@@ -190,6 +204,13 @@ function updateCurrentTime() {
 
 // Loading Screen (fallback)
 window.addEventListener('load', function() {
+    // Scroll to top immediately when page loads
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'instant'
+    });
+    
     // Show opening screen immediately
     const openingScreen = document.getElementById('opening-screen');
     if (openingScreen) {
@@ -783,15 +804,15 @@ function addMusicPlayer() {
     musicButton.className = 'music-player-btn';
     musicButton.style.cssText = `
         position: fixed;
-        bottom: 100px;
+        top: 20px;
         right: 20px;
-        width: 55px;
-        height: 55px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         border: none;
         background: linear-gradient(135deg, #FFB6C1, #F8BBD9);
         color: white;
-        font-size: 22px;
+        font-size: 20px;
         cursor: pointer;
         z-index: 1000;
         transition: all 0.3s ease;
@@ -1546,8 +1567,8 @@ function addScrollToTopButton() {
     scrollToTopBtn.className = 'scroll-to-top';
     scrollToTopBtn.style.cssText = `
         position: fixed;
-        bottom: 30px;
-        right: 20px;
+        top: 20px;
+        left: 20px;
         width: 50px;
         height: 50px;
         border-radius: 50%;

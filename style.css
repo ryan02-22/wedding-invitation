@@ -45,6 +45,7 @@ html {
     /* Fix scroll bug on mobile */
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
+    scroll-padding-top: 0;
 }
 
 /* Scroll Progress Bar */
@@ -137,6 +138,7 @@ body {
     transform: translateZ(0);
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    scroll-padding-top: 0;
 }
 
 body::before {
@@ -280,11 +282,44 @@ body::before {
 
 .opening-title {
     font-family: 'Dancing Script', cursive;
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: 700;
     margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    animation: fadeInUp 1s ease-out 0.3s both;
+    background: linear-gradient(135deg, #FFB6C1, #F8BBD9, #FFC0CB, #FFB6C1);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 
+        0 0 30px rgba(255, 182, 193, 0.8),
+        0 0 60px rgba(255, 192, 203, 0.6),
+        2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: 
+        fadeInUp 1s ease-out 0.3s both,
+        gradientShift 3s ease-in-out infinite,
+        gentleGlow 2s ease-in-out infinite alternate;
+    position: relative;
+    letter-spacing: 2px;
+}
+
+.opening-title::before {
+    content: '💕';
+    position: absolute;
+    left: -60px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    animation: float 2s ease-in-out infinite;
+}
+
+.opening-title::after {
+    content: '💕';
+    position: absolute;
+    right: -60px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    animation: float 2s ease-in-out infinite reverse;
 }
 
 .opening-subtitle {
@@ -777,16 +812,25 @@ body::before {
 
 .couple-names {
     font-family: 'Dancing Script', cursive;
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: 700;
     color: #fff;
     margin-bottom: 20px;
+    background: linear-gradient(135deg, #FFB6C1, #F8BBD9, #FFC0CB, #FFB6C1);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     text-shadow: 
-        0 0 20px rgba(255, 182, 193, 0.8),
-        0 0 40px rgba(255, 192, 203, 0.6),
+        0 0 30px rgba(255, 182, 193, 0.8),
+        0 0 60px rgba(255, 192, 203, 0.6),
         2px 2px 4px rgba(0, 0, 0, 0.3);
-    animation: gentleGlow 1.2s ease-out, fadeInUp 1s ease-out;
+    animation: 
+        gentleGlow 1.2s ease-out, 
+        fadeInUp 1s ease-out,
+        gradientShift 3s ease-in-out infinite;
     position: relative;
+    letter-spacing: 2px;
 }
 
 .couple-names::before {
@@ -824,6 +868,18 @@ body::before {
             0 0 20px rgba(255, 182, 193, 0.8),
             0 0 40px rgba(255, 192, 203, 0.6),
             2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
     }
 }
 
@@ -2156,15 +2212,15 @@ body::before {
 /* Scroll to Top Button */
 .scroll-to-top {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    top: 20px;
+    left: 20px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
     background: linear-gradient(135deg, #FFB6C1, #F8BBD9);
     border: none;
     color: white;
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
@@ -2186,15 +2242,15 @@ body::before {
 /* Music Player Button */
 .music-player-btn {
     position: fixed;
-    bottom: 100px;
+    top: 20px;
     right: 20px;
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: linear-gradient(135deg, #FFB6C1, #F8BBD9);
     border: none;
     color: white;
-    font-size: 22px;
+    font-size: 20px;
     cursor: pointer;
     z-index: 1000;
     transition: all 0.3s ease;
@@ -2221,6 +2277,17 @@ body::before {
     
     .couple-names {
         font-size: 2.5rem;
+    }
+    
+    .opening-title {
+        font-size: 3rem;
+    }
+    
+    .opening-title::before,
+    .opening-title::after {
+        font-size: 1.2rem;
+        left: -30px;
+        right: -30px;
     }
     
     .wedding-date {
@@ -2320,19 +2387,20 @@ body::before {
     
     /* Scroll to Top Button Mobile */
     .scroll-to-top {
-        bottom: 20px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
+        top: 15px;
+        left: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
     }
     
     /* Music Player Button Mobile */
     .music-player-btn {
-        bottom: 80px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
     }
     
     /* Mobile Performance Optimizations */
