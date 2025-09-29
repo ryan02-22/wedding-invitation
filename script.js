@@ -31,7 +31,7 @@ function debounce(func, wait) {
 
 // Play opening music
 function playOpeningMusic() {
-    const openingAudio = new Audio('assets/music/opening.mp3');
+    const openingAudio = new Audio('musik.mp3');
     openingAudio.volume = 0.4;
     openingAudio.loop = false;
     
@@ -49,17 +49,19 @@ function openInvitation() {
     // Play opening music
     playOpeningMusic();
     
+    // Show loading screen immediately
+    loadingScreen.classList.remove('hidden');
+    loadingScreen.style.opacity = '1';
+    
+    // Start realistic loading animation immediately
+    startRealisticLoading();
+    
     // Hide opening screen with animation
     openingScreen.style.opacity = '0';
     openingScreen.style.transform = 'scale(0.8)';
     
     setTimeout(() => {
         openingScreen.classList.add('hidden');
-        // Show loading screen
-        loadingScreen.classList.remove('hidden');
-        
-        // Start realistic loading animation
-        startRealisticLoading();
     }, 800);
 }
 
@@ -74,6 +76,13 @@ function startRealisticLoading() {
     const progressFill = document.getElementById('loadingProgressFill');
     const percentageText = document.getElementById('loadingPercentage');
     const loadingScreen = document.getElementById('loading-screen');
+    
+    // Ensure loading screen is visible
+    if (loadingScreen) {
+        loadingScreen.style.display = 'flex';
+        loadingScreen.style.opacity = '1';
+        loadingScreen.style.visibility = 'visible';
+    }
     
     let progress = 0;
     const totalDuration = 2000; // 2 seconds total (balanced)
@@ -1562,7 +1571,7 @@ function addScrollToTopButton() {
 
 // Background Music Player
 function initializeBackgroundMusic() {
-    const backgroundAudio = new Audio('assets/music/background.mp3');
+    const backgroundAudio = new Audio('musik.mp3');
     backgroundAudio.volume = 0.2; // Volume rendah
     backgroundAudio.loop = true;
     
