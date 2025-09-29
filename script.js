@@ -162,6 +162,25 @@ function createFloatingHeart() {
 // Create floating hearts periodically
 setInterval(createFloatingHeart, 2000);
 
+// Floating Petals Animation
+function createFloatingPetal() {
+    const petal = document.createElement('div');
+    petal.className = 'petal';
+    petal.style.left = Math.random() * 100 + 'vw';
+    petal.style.animationDuration = (Math.random() * 4 + 8) + 's';
+    petal.style.width = (Math.random() * 8 + 8) + 'px';
+    petal.style.height = petal.style.width;
+    
+    document.querySelector('.floating-petals').appendChild(petal);
+    
+    setTimeout(() => {
+        petal.remove();
+    }, 12000);
+}
+
+// Create floating petals periodically
+setInterval(createFloatingPetal, 3000);
+
 // RSVP Functionality
 function confirmAttendance(status) {
     const guestName = document.getElementById('guest-name').value;
@@ -538,15 +557,25 @@ function addScrollAnimations() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                if (entry.target.classList.contains('gallery-item')) {
+                    entry.target.style.animation = 'fadeInSlow 1.2s ease-out forwards';
+                } else if (entry.target.classList.contains('detail-item')) {
+                    entry.target.style.animation = 'fadeInUp 1s ease-out forwards';
+                } else if (entry.target.classList.contains('wish-item')) {
+                    entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                } else {
+                    entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+                }
             }
         });
     }, observerOptions);
 
     // Observe elements for scroll animations
-    document.querySelectorAll('.gallery-item, .detail-item').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
+    document.querySelectorAll('.gallery-item, .detail-item, .wish-item, .countdown-section, .wishes-section').forEach(el => {
+        if (!el.classList.contains('gallery-item')) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+        }
         observer.observe(el);
     });
 }
