@@ -269,6 +269,96 @@
             <div class="wishes-display" id="wishes-display">
                 <!-- Ucapan akan ditampilkan di sini -->
             </div>
+            
+            <!-- Admin Panel untuk menghapus ucapan -->
+            <div class="admin-panel" id="admin-panel" style="display: none;">
+                <h4>🔧 Panel Admin</h4>
+                <p>Klik pada ucapan untuk menghapusnya</p>
+                
+                <!-- Analytics Dashboard -->
+                <div class="analytics-dashboard">
+                    <h5>📊 Guest Analytics</h5>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <div class="analytics-icon">👥</div>
+                            <div class="analytics-content">
+                                <div class="analytics-number" id="total-visitors">0</div>
+                                <div class="analytics-label">Total Pengunjung</div>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-icon">💌</div>
+                            <div class="analytics-content">
+                                <div class="analytics-number" id="total-wishes">0</div>
+                                <div class="analytics-label">Ucapan Selamat</div>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-icon">✅</div>
+                            <div class="analytics-content">
+                                <div class="analytics-number" id="total-rsvp">0</div>
+                                <div class="analytics-label">Konfirmasi Hadir</div>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <div class="analytics-icon">📅</div>
+                            <div class="analytics-content">
+                                <div class="analytics-number" id="calendar-saves">0</div>
+                                <div class="analytics-label">Simpan Kalender</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-charts">
+                        <div class="chart-container">
+                            <h6>📈 Aktivitas Harian</h6>
+                            <canvas id="dailyChart" width="300" height="150"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h6>🕒 Waktu Kunjungan</h6>
+                            <canvas id="hourlyChart" width="300" height="150"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="toggle-admin-btn" onclick="toggleAdminMode()">
+                    <i class="fas fa-cog"></i> Keluar dari Mode Admin
+                </button>
+            </div>
+            
+            <!-- Toggle Admin Button -->
+            <div class="admin-toggle">
+                <button class="admin-toggle-btn" onclick="toggleAdminMode()">
+                    <i class="fas fa-cog"></i> Mode Admin
+                </button>
+            </div>
+            
+            <!-- Theme Selector -->
+            <div class="theme-selector">
+                <h4>🎨 Pilih Tema</h4>
+                <div class="theme-options">
+                    <button class="theme-btn active" data-theme="brown" onclick="changeTheme('brown')">
+                        <div class="theme-preview brown"></div>
+                        <span>Coklat Cream</span>
+                    </button>
+                    <button class="theme-btn" data-theme="pink" onclick="changeTheme('pink')">
+                        <div class="theme-preview pink"></div>
+                        <span>Pink Romantic</span>
+                    </button>
+                    <button class="theme-btn" data-theme="blue" onclick="changeTheme('blue')">
+                        <div class="theme-preview blue"></div>
+                        <span>Blue Elegant</span>
+                    </button>
+                    <button class="theme-btn" data-theme="green" onclick="changeTheme('green')">
+                        <div class="theme-preview green"></div>
+                        <span>Green Nature</span>
+                    </button>
+                    <button class="theme-btn" data-theme="purple" onclick="changeTheme('purple')">
+                        <div class="theme-preview purple"></div>
+                        <span>Purple Royal</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Footer -->

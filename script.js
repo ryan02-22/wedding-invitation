@@ -33,6 +33,7 @@ function startMainFeatures() {
     addMusicPlayer();
     checkExistingRSVP();
     loadWishes(); // Load existing wishes
+    initializeAnalyticsAndTheme(); // Initialize analytics and theme
 }
 
 // Update current time
@@ -370,22 +371,29 @@ function saveWishToStorage(wishData) {
     localStorage.setItem('wishes', JSON.stringify(wishes));
 }
 
-// Display wish on page
+// Display wish on page (updated with admin mode support)
 function displayWish(wishData) {
     const wishesDisplay = document.getElementById('wishes-display');
     
     const wishElement = document.createElement('div');
     wishElement.className = 'wish-item';
+    wishElement.dataset.wishId = wishData.id;
     wishElement.innerHTML = `
         <div class="wish-name">${escapeHtml(wishData.name)}</div>
         <div class="wish-message">${escapeHtml(wishData.message)}</div>
         <div class="wish-time">${formatDate(wishData.timestamp)}</div>
     `;
     
+    // Add click listener if in admin mode
+    if (isAdminMode) {
+        wishElement.classList.add('admin-mode');
+        wishElement.addEventListener('click', handleWishDelete);
+    }
+    
     wishesDisplay.insertBefore(wishElement, wishesDisplay.firstChild);
 }
 
-// Load existing wishes from localStorage
+// Load existing wishes from localStorage (updated with admin mode support)
 function loadWishes() {
     const wishes = JSON.parse(localStorage.getItem('wishes') || '[]');
     const wishesDisplay = document.getElementById('wishes-display');
@@ -636,6 +644,89 @@ function addMusicPlayer() {
 // Initialize music player
 addMusicPlayer();
 
+// Admin Mode Variables
+let isAdminMode = false;
+
+// Analytics Variables
+let analyticsData = {
+    visitors: 0,
+    wishes: 0,
+    rsvp: 0,
+    calendarSaves: 0,
+    dailyActivity: {},
+    hourlyActivity: {}
+};
+
+// Theme Variables
+let currentTheme = 'brown';
+
+// Toggle Admin Mode
+function toggleAdminMode() {
+    isAdminMode = !isAdminMode;
+    const adminPanel = document.getElementById('admin-panel');
+    const adminToggleBtn = document.querySelector('.admin-toggle-btn');
+    
+    if (isAdminMode) {
+        adminPanel.style.display = 'block';
+        adminToggleBtn.innerHTML = '<i class="fas fa-cog"></i> Keluar dari Mode Admin';
+        adminToggleBtn.style.background = '#ff6b6b';
+        adminToggleBtn.style.borderColor = '#ff6b6b';
+        adminToggleBtn.style.color = 'white';
+        
+        // Add admin mode class to all wish items
+        document.querySelectorAll('.wish-item').forEach(item => {
+            item.classList.add('admin-mode');
+            item.addEventListener('click', handleWishDelete);
+        });
+        
+        showToast('🔧 Mode Admin aktif - Klik ucapan untuk menghapus', 'info');
+        updateAnalytics();
+    } else {
+        adminPanel.style.display = 'none';
+        adminToggleBtn.innerHTML = '<i class="fas fa-cog"></i> Mode Admin';
+        adminToggleBtn.style.background = 'rgba(139, 69, 19, 0.1)';
+        adminToggleBtn.style.borderColor = '#8B4513';
+        adminToggleBtn.style.color = '#8B4513';
+        
+        // Remove admin mode class from all wish items
+        document.querySelectorAll('.wish-item').forEach(item => {
+            item.classList.remove('admin-mode');
+            item.removeEventListener('click', handleWishDelete);
+        });
+        
+        showToast('✅ Mode Admin dinonaktifkan', 'success');
+    }
+}
+
+// Handle wish deletion
+function handleWishDelete(event) {
+    if (!isAdminMode) return;
+    
+    const wishItem = event.currentTarget;
+    const wishId = wishItem.dataset.wishId;
+    
+    // Show confirmation dialog
+    const confirmDelete = confirm('Apakah Anda yakin ingin menghapus ucapan ini?');
+    
+    if (confirmDelete) {
+        deleteWish(wishId);
+        wishItem.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => {
+            wishItem.remove();
+        }, 300);
+        
+        showToast('🗑️ Ucapan berhasil dihapus', 'success');
+    }
+}
+
+// Delete wish from storage
+function deleteWish(wishId) {
+    let wishes = JSON.parse(localStorage.getItem('wishes') || '[]');
+    wishes = wishes.filter(wish => wish.id != wishId);
+    localStorage.setItem('wishes', JSON.stringify(wishes));
+}
+
+
 // Save to Calendar Function
 function saveToCalendar() {
     const weddingDate = new Date('2025-02-15T08:00:00+07:00');
@@ -817,3 +908,274 @@ function createConfetti() {
 
 // Trigger confetti after loading
 setTimeout(createConfetti, 3000);
+
+// Analytics Functions
+function trackVisitor() {
+    const today = new Date().toDateString();
+    const hour = new Date().getHours();
+    
+    // Load existing analytics
+    const savedAnalytics = localStorage.getItem('analyticsData');
+    if (savedAnalytics) {
+        analyticsData = JSON.parse(savedAnalytics);
+    }
+    
+    // Check if this is a new visitor today
+    if (!analyticsData.dailyActivity[today]) {
+        analyticsData.visitors++;
+        analyticsData.dailyActivity[today] = 1;
+    } else {
+        analyticsData.dailyActivity[today]++;
+    }
+    
+    // Track hourly activity
+    if (!analyticsData.hourlyActivity[hour]) {
+        analyticsData.hourlyActivity[hour] = 1;
+    } else {
+        analyticsData.hourlyActivity[hour]++;
+    }
+    
+    // Save analytics
+    localStorage.setItem('analyticsData', JSON.stringify(analyticsData));
+}
+
+function trackWish() {
+    analyticsData.wishes++;
+    localStorage.setItem('analyticsData', JSON.stringify(analyticsData));
+    updateAnalytics();
+}
+
+function trackRSVP() {
+    analyticsData.rsvp++;
+    localStorage.setItem('analyticsData', JSON.stringify(analyticsData));
+    updateAnalytics();
+}
+
+function trackCalendarSave() {
+    analyticsData.calendarSaves++;
+    localStorage.setItem('analyticsData', JSON.stringify(analyticsData));
+    updateAnalytics();
+}
+
+function updateAnalytics() {
+    // Load analytics data
+    const savedAnalytics = localStorage.getItem('analyticsData');
+    if (savedAnalytics) {
+        analyticsData = JSON.parse(savedAnalytics);
+    }
+    
+    // Update analytics display
+    document.getElementById('total-visitors').textContent = analyticsData.visitors;
+    document.getElementById('total-wishes').textContent = analyticsData.wishes;
+    document.getElementById('total-rsvp').textContent = analyticsData.rsvp;
+    document.getElementById('calendar-saves').textContent = analyticsData.calendarSaves;
+    
+    // Draw charts
+    drawDailyChart();
+    drawHourlyChart();
+}
+
+function drawDailyChart() {
+    const canvas = document.getElementById('dailyChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const dailyData = analyticsData.dailyActivity;
+    const labels = Object.keys(dailyData).slice(-7); // Last 7 days
+    const data = labels.map(label => dailyData[label] || 0);
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw simple bar chart
+    const maxValue = Math.max(...data, 1);
+    const barWidth = canvas.width / labels.length;
+    
+    ctx.fillStyle = '#8B4513';
+    labels.forEach((label, index) => {
+        const barHeight = (data[index] / maxValue) * (canvas.height - 40);
+        const x = index * barWidth + 10;
+        const y = canvas.height - barHeight - 20;
+        
+        ctx.fillRect(x, y, barWidth - 20, barHeight);
+        
+        // Draw label
+        ctx.fillStyle = '#666';
+        ctx.font = '10px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(data[index], x + barWidth/2 - 10, y - 5);
+        ctx.fillStyle = '#8B4513';
+    });
+}
+
+function drawHourlyChart() {
+    const canvas = document.getElementById('hourlyChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const hourlyData = analyticsData.hourlyActivity;
+    const hours = Array.from({length: 24}, (_, i) => i);
+    const data = hours.map(hour => hourlyData[hour] || 0);
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw simple line chart
+    const maxValue = Math.max(...data, 1);
+    const stepX = canvas.width / 24;
+    
+    ctx.strokeStyle = '#8B4513';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    
+    hours.forEach((hour, index) => {
+        const x = index * stepX;
+        const y = canvas.height - (data[index] / maxValue) * (canvas.height - 40) - 20;
+        
+        if (index === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    });
+    
+    ctx.stroke();
+    
+    // Draw points
+    ctx.fillStyle = '#8B4513';
+    hours.forEach((hour, index) => {
+        const x = index * stepX;
+        const y = canvas.height - (data[index] / maxValue) * (canvas.height - 40) - 20;
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, 2 * Math.PI);
+        ctx.fill();
+    });
+}
+
+// Theme Functions
+function changeTheme(theme) {
+    currentTheme = theme;
+    
+    // Remove existing theme classes
+    document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green', 'theme-purple');
+    
+    // Add new theme class
+    if (theme !== 'brown') {
+        document.body.classList.add(`theme-${theme}`);
+    }
+    
+    // Update active button
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+    
+    // Save theme preference
+    localStorage.setItem('selectedTheme', theme);
+    
+    // Apply theme colors
+    applyThemeColors(theme);
+    
+    showToast(`🎨 Tema ${theme} berhasil diterapkan!`, 'success');
+}
+
+function applyThemeColors(theme) {
+    const themes = {
+        brown: {
+            primary: '#8B4513',
+            secondary: '#A0522D',
+            accent: '#D4C4B0',
+            backgroundStart: '#F5E6D3',
+            backgroundEnd: '#C4B5A0',
+            textColor: '#5D4E37'
+        },
+        pink: {
+            primary: '#E91E63',
+            secondary: '#F06292',
+            accent: '#F8BBD9',
+            backgroundStart: '#FFE4E1',
+            backgroundEnd: '#FFB6C1',
+            textColor: '#880E4F'
+        },
+        blue: {
+            primary: '#1976D2',
+            secondary: '#42A5F5',
+            accent: '#B3D9FF',
+            backgroundStart: '#E6F3FF',
+            backgroundEnd: '#B3D9FF',
+            textColor: '#0D47A1'
+        },
+        green: {
+            primary: '#388E3C',
+            secondary: '#66BB6A',
+            accent: '#C8E6C9',
+            backgroundStart: '#E8F5E8',
+            backgroundEnd: '#C8E6C9',
+            textColor: '#1B5E20'
+        },
+        purple: {
+            primary: '#7B1FA2',
+            secondary: '#BA68C8',
+            accent: '#E1BEE7',
+            backgroundStart: '#F3E5F5',
+            backgroundEnd: '#E1BEE7',
+            textColor: '#4A148C'
+        }
+    };
+    
+    const colors = themes[theme];
+    if (!colors) return;
+    
+    // Update CSS custom properties
+    document.documentElement.style.setProperty('--primary-color', colors.primary);
+    document.documentElement.style.setProperty('--secondary-color', colors.secondary);
+    document.documentElement.style.setProperty('--accent-color', colors.accent);
+    document.documentElement.style.setProperty('--background-start', colors.backgroundStart);
+    document.documentElement.style.setProperty('--background-end', colors.backgroundEnd);
+    document.documentElement.style.setProperty('--text-color', colors.textColor);
+    
+    // Update body background
+    document.body.style.background = `linear-gradient(135deg, ${colors.backgroundStart} 0%, ${colors.backgroundEnd} 100%)`;
+    
+    // Update opening screen background
+    const openingScreen = document.getElementById('opening-screen');
+    if (openingScreen) {
+        openingScreen.style.background = `linear-gradient(135deg, ${colors.backgroundStart} 0%, ${colors.backgroundEnd} 100%)`;
+    }
+    
+    // Update loading screen background
+    const loadingScreen = document.getElementById('loading-screen');
+    if (loadingScreen) {
+        loadingScreen.style.background = `linear-gradient(135deg, ${colors.backgroundStart} 0%, ${colors.backgroundEnd} 100%)`;
+    }
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('selectedTheme') || 'brown';
+    changeTheme(savedTheme);
+}
+
+// Initialize analytics and theme on page load
+function initializeAnalyticsAndTheme() {
+    trackVisitor();
+    loadTheme();
+}
+
+// Update existing functions to track analytics
+const originalSubmitWish = submitWish;
+submitWish = function() {
+    originalSubmitWish();
+    trackWish();
+};
+
+const originalConfirmAttendance = confirmAttendance;
+confirmAttendance = function(status) {
+    originalConfirmAttendance(status);
+    trackRSVP();
+};
+
+const originalSaveToCalendar = saveToCalendar;
+saveToCalendar = function() {
+    originalSaveToCalendar();
+    trackCalendarSave();
+};
