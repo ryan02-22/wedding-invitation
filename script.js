@@ -70,63 +70,36 @@ function startRealisticLoading() {
     const loadingScreen = document.getElementById('loading-screen');
     
     let progress = 0;
-    const totalDuration = 3000; // 3 seconds total
-    const updateInterval = 50; // Update every 50ms
-    const totalSteps = totalDuration / updateInterval;
+    const totalDuration = 1200; // 1.2 seconds total (much faster)
+    const updateInterval = 20; // Update every 20ms (smoother)
     
-    // Simulate realistic loading with varying speeds
-    const loadingSteps = [
-        { start: 0, end: 15, speed: 0.3 },    // Slow start
-        { start: 15, end: 45, speed: 1.2 },   // Fast middle
-        { start: 45, end: 70, speed: 0.8 },   // Medium speed
-        { start: 70, end: 85, speed: 0.4 },   // Slow down
-        { start: 85, end: 95, speed: 0.2 },   // Very slow
-        { start: 95, end: 100, speed: 0.1 }   // Crawl to finish
-    ];
-    
-    let currentStep = 0;
-    let stepProgress = 0;
+    // Simple and fast loading progression
+    const progressIncrement = 100 / (totalDuration / updateInterval);
     
     const loadingInterval = setInterval(() => {
-        const currentStepData = loadingSteps[currentStep];
-        const stepRange = currentStepData.end - currentStepData.start;
-        const stepSpeed = currentStepData.speed;
+        progress += progressIncrement;
         
-        // Add some randomness to make it more realistic
-        const randomFactor = 0.8 + Math.random() * 0.4; // 0.8 to 1.2
-        const increment = (stepSpeed * randomFactor) / totalSteps;
-        
-        stepProgress += increment;
-        
-        if (stepProgress >= 1) {
-            stepProgress = 0;
-            currentStep++;
-            if (currentStep >= loadingSteps.length) {
-                currentStep = loadingSteps.length - 1;
-            }
-        }
-        
-        // Calculate current progress
-        const stepProgressValue = currentStepData.start + (stepProgress * stepRange);
-        progress = Math.min(stepProgressValue, 100);
+        // Add slight randomness for realism but keep it fast
+        const randomFactor = 0.95 + Math.random() * 0.1; // 0.95 to 1.05
+        const actualProgress = Math.min(progress * randomFactor, 100);
         
         // Update UI
-        progressFill.style.width = progress + '%';
-        percentageText.textContent = Math.round(progress) + '%';
+        progressFill.style.width = actualProgress + '%';
+        percentageText.textContent = Math.round(actualProgress) + '%';
         
         // Check if loading is complete
-        if (progress >= 100) {
+        if (actualProgress >= 100) {
             clearInterval(loadingInterval);
             
-            // Hide loading screen and show main content
+            // Hide loading screen and show main content quickly
+        setTimeout(() => {
+            loadingScreen.style.opacity = '0';
             setTimeout(() => {
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => {
                     loadingScreen.classList.add('hidden');
-                    // Start all other functions
-                    startMainFeatures();
-                }, 500);
-            }, 300);
+                // Start all other functions
+                startMainFeatures();
+                }, 150); // Faster transition
+            }, 50); // Faster transition
         }
     }, updateInterval);
 }
@@ -177,14 +150,12 @@ function updateCurrentTime() {
 
 // Loading Screen (fallback)
 window.addEventListener('load', function() {
-    // Show opening screen after a short delay
-    setTimeout(() => {
-        const openingScreen = document.getElementById('opening-screen');
-        if (openingScreen) {
-            openingScreen.classList.remove('hidden');
-            openingScreen.style.opacity = '1';
-        }
-    }, 500);
+    // Show opening screen immediately
+    const openingScreen = document.getElementById('opening-screen');
+    if (openingScreen) {
+        openingScreen.classList.remove('hidden');
+        openingScreen.style.opacity = '1';
+    }
 });
 
 // Countdown Timer
@@ -256,6 +227,15 @@ const countdownInterval = setInterval(updateCountdown, 1000);
 
 // Floating Hearts Animation
 function createFloatingHeart() {
+    // Skip on low-end devices or mobile to prevent lag
+    if (isLowEndDevice || isMobile) return;
+    
+    const floatingContainer = document.querySelector('.floating-hearts');
+    if (!floatingContainer) return;
+    
+    // Limit number of hearts to prevent performance issues
+    if (floatingContainer.children.length >= 5) return;
+    
     const heart = document.createElement('div');
     heart.className = 'heart';
     heart.innerHTML = '❤️';
@@ -263,15 +243,17 @@ function createFloatingHeart() {
     heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
     heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
     
-    document.querySelector('.floating-hearts').appendChild(heart);
+    floatingContainer.appendChild(heart);
     
     setTimeout(() => {
+        if (heart.parentNode) {
         heart.remove();
+        }
     }, 6000);
 }
 
-// Create floating hearts periodically
-const heartsInterval = setInterval(createFloatingHeart, 2000);
+// Create floating hearts periodically (less frequent for better performance)
+const heartsInterval = setInterval(createFloatingHeart, isMobile ? 5000 : 3000);
 
 // Floating Petals Animation
 function createFloatingPetal() {
@@ -308,19 +290,19 @@ const petalsInterval = setInterval(createFloatingPetal, petalInterval);
 // RSVP Functionality
 function confirmAttendance(status) {
     try {
-        const guestName = document.getElementById('guest-name').value;
-        const guestCount = document.getElementById('guest-count').value;
-        
-        // Validasi input
-        if (!guestName.trim()) {
+    const guestName = document.getElementById('guest-name').value;
+    const guestCount = document.getElementById('guest-count').value;
+    
+    // Validasi input
+    if (!guestName.trim()) {
             showToast('❌ Mohon isi nama lengkap Anda', 'error');
-            return;
-        }
-        
-        if (!guestCount || guestCount < 1) {
+        return;
+    }
+    
+    if (!guestCount || guestCount < 1) {
             showToast('❌ Mohon isi jumlah tamu minimal 1', 'error');
-            return;
-        }
+        return;
+    }
     
     const buttons = document.querySelectorAll('.rsvp-btn');
     buttons.forEach(btn => {
@@ -377,8 +359,8 @@ function confirmAttendance(status) {
     
     localStorage.setItem('rsvpData', JSON.stringify(rsvpData));
     
-        // Send data to server
-        sendRSVPToServer(rsvpData);
+    // Send data to server
+    sendRSVPToServer(rsvpData);
         
     } catch (error) {
         // Error in confirmAttendance
@@ -396,14 +378,14 @@ function confirmAttendance(status) {
 // Send RSVP to WhatsApp
 function sendToWhatsApp(status, guestName, guestCount) {
     try {
-        const whatsappNumber = "6281234567890"; // Ganti dengan nomor WhatsApp Anda
+    const whatsappNumber = "6281234567890"; // Ganti dengan nomor WhatsApp Anda
         const weddingDate = "15 Februari 2025";
-        const weddingLocation = "Masjid Agung Slawi, Tegal";
-        
-        let message;
-        
-        if (status === 'hadir') {
-            message = `Assalamualaikum! 
+    const weddingLocation = "Masjid Agung Slawi, Tegal";
+    
+    let message;
+    
+    if (status === 'hadir') {
+        message = `Assalamualaikum! 
 
 Saya ${guestName} ingin konfirmasi kehadiran untuk pernikahan Fatur & Simbet.
 
@@ -415,8 +397,8 @@ Saya ${guestName} ingin konfirmasi kehadiran untuk pernikahan Fatur & Simbet.
 Kami akan hadir di hari bahagia kalian. Semoga pernikahan berjalan lancar! 🙏
 
 Terima kasih atas undangannya! 💕`;
-        } else {
-            message = `Assalamualaikum! 
+    } else {
+        message = `Assalamualaikum! 
 
 Saya ${guestName} ingin konfirmasi kehadiran untuk pernikahan Fatur & Simbet.
 
@@ -431,7 +413,7 @@ Doa terbaik untuk Ayu & Fatur! 💕`;
     }
 
         const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank');
+    window.open(url, '_blank');
         
     } catch (error) {
         // Error in sendToWhatsApp
@@ -495,16 +477,16 @@ function sendRSVPToServer(rsvpData) {
 // Wishes System
 function submitWish() {
     try {
-        const wisherName = document.getElementById('wisher-name').value;
-        const wishMessage = document.getElementById('wish-message').value;
-        
-        // Validasi input
-        if (!wisherName.trim()) {
+    const wisherName = document.getElementById('wisher-name').value;
+    const wishMessage = document.getElementById('wish-message').value;
+    
+    // Validasi input
+    if (!wisherName.trim()) {
             showToast('❌ Mohon isi nama Anda', 'error');
-            return;
-        }
-        
-        if (!wishMessage.trim()) {
+        return;
+    }
+    
+    if (!wishMessage.trim()) {
             showToast('❌ Mohon isi ucapan selamat', 'error');
             return;
         }
@@ -516,29 +498,29 @@ function submitWish() {
         
         if (wishMessage.trim().length < 10) {
             showToast('❌ Ucapan minimal 10 karakter', 'error');
-            return;
-        }
+        return;
+    }
     
-        // Buat objek wish
-        const wishData = {
-            name: wisherName.trim(),
-            message: wishMessage.trim(),
-            timestamp: new Date().toISOString(),
-            id: Date.now() // Unique ID
-        };
-        
-        // Simpan ke localStorage
-        saveWishToStorage(wishData);
-        
-        // Tampilkan di halaman
-        displayWish(wishData);
-        
-        // Reset form
-        document.getElementById('wisher-name').value = '';
-        document.getElementById('wish-message').value = '';
-        
-        // Show success message
-        showToast('💝 Ucapan selamat berhasil dikirim!', 'success');
+    // Buat objek wish
+    const wishData = {
+        name: wisherName.trim(),
+        message: wishMessage.trim(),
+        timestamp: new Date().toISOString(),
+        id: Date.now() // Unique ID
+    };
+    
+    // Simpan ke localStorage
+    saveWishToStorage(wishData);
+    
+    // Tampilkan di halaman
+    displayWish(wishData);
+    
+    // Reset form
+    document.getElementById('wisher-name').value = '';
+    document.getElementById('wish-message').value = '';
+    
+    // Show success message
+    showToast('💝 Ucapan selamat berhasil dikirim!', 'success');
         
         // Track wish in analytics
         trackWish();
@@ -713,41 +695,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Add scroll animations
-function addScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+// Scroll animations are now handled by initializeScrollAnimations()
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                if (entry.target.classList.contains('gallery-item')) {
-                    entry.target.style.animation = 'fadeInSlow 1.2s ease-out forwards';
-                } else if (entry.target.classList.contains('detail-item')) {
-                    entry.target.style.animation = 'fadeInUp 1s ease-out forwards';
-                } else if (entry.target.classList.contains('wish-item')) {
-                    entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
-                } else {
-                    entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
-                }
-            }
-        });
-    }, observerOptions);
-
-    // Observe elements for scroll animations
-    document.querySelectorAll('.gallery-item, .detail-item, .wish-item, .countdown-section, .wishes-section').forEach(el => {
-        if (!el.classList.contains('gallery-item')) {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-        }
-        observer.observe(el);
-    });
-}
-
-// Initialize scroll animations
-addScrollAnimations();
+// Scroll animations are initialized in startMainFeatures()
 
 // Add click effect to gallery images
 document.querySelectorAll('.gallery-item img').forEach(img => {
@@ -1171,8 +1121,7 @@ function createConfetti() {
     }
 }
 
-// Trigger confetti after loading
-setTimeout(createConfetti, 3000);
+// Confetti removed to improve performance
 
 // Analytics Functions
 function trackVisitor() {

@@ -2406,4 +2406,25 @@ body::before {
         min-width: 70px;
         padding: 15px 10px;
     }
+    
+    /* Disable heavy animations on small screens for better performance */
+    .floating-hearts,
+    .floating-petals {
+        display: none !important;
+    }
+    
+    /* Reduce animation complexity */
+    .gallery-item,
+    .wish-item,
+    .rsvp-section,
+    .countdown-section {
+        animation-duration: 0.5s !important;
+    }
+    
+    /* Simplify shadows for better performance */
+    .gallery-item,
+    .wish-item,
+    .invitation-card {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    }
 }
