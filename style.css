@@ -415,9 +415,10 @@ body::before {
     transition: opacity 0.5s ease-out;
     overflow: hidden;
     font-family: 'Poppins', sans-serif;
-    pointer-events: none; /* Allow clicks to pass through */
-    /* Prevent scrolling on loading screen */
+    pointer-events: auto;
     -webkit-overflow-scrolling: touch;
+    opacity: 1;
+    visibility: visible;
 }
 
 #loading-screen.hidden {
@@ -2222,8 +2223,8 @@ body::before {
 /* Scroll to Top Button */
 .scroll-to-top {
     position: fixed;
-    top: 20px;
-    left: 20px;
+    bottom: 20px;
+    right: 20px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -2232,16 +2233,17 @@ body::before {
     color: white;
     font-size: 20px;
     cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
+    opacity: 1;
+    visibility: visible;
     transition: all 0.3s ease;
-    z-index: 1000;
+    z-index: 10000;
     box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    pointer-events: auto;
 }
 
 .scroll-to-top:hover {
@@ -2267,16 +2269,17 @@ body::before {
     color: white;
     font-size: 20px;
     cursor: pointer;
-    z-index: 1000;
+    z-index: 10000;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
-    opacity: 0;
-    visibility: hidden;
+    opacity: 1;
+    visibility: visible;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    pointer-events: auto;
 }
 
 .music-player-btn:hover {
@@ -2287,6 +2290,14 @@ body::before {
 
 .music-player-btn:active {
     transform: scale(1.05) translateY(-1px);
+}
+
+/* Ensure buttons are visible on all devices */
+.music-player-btn,
+.scroll-to-top {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
 }
 
 /* Responsive Design */
@@ -2407,8 +2418,8 @@ body::before {
     
     /* Scroll to Top Button Mobile */
     .scroll-to-top {
-        top: 15px;
-        left: 15px;
+        bottom: 15px;
+        right: 15px;
         width: 45px;
         height: 45px;
         font-size: 18px;
@@ -2430,6 +2441,7 @@ body::before {
     .scroll-to-top {
         opacity: 1 !important;
         visibility: visible !important;
+        pointer-events: auto !important;
     }
     
     /* Mobile Performance Optimizations */
@@ -2520,6 +2532,23 @@ body::before {
     .theme-btn {
         width: auto;
         min-width: 120px;
+    }
+    
+    /* Tablet button adjustments */
+    .music-player-btn {
+        top: 25px;
+        right: 25px;
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+    
+    .scroll-to-top {
+        bottom: 25px;
+        right: 25px;
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
     }
     
     /* Reduce floating petals on tablet */

@@ -79,12 +79,15 @@ function openInvitation() {
     
     // Show loading screen immediately
     loadingScreen.classList.remove('hidden');
-    loadingScreen.style.opacity = '1';
     loadingScreen.style.display = 'flex';
+    loadingScreen.style.opacity = '1';
     loadingScreen.style.visibility = 'visible';
+    loadingScreen.style.zIndex = '9999';
     
     // Start realistic loading animation immediately
-    startRealisticLoading();
+    setTimeout(() => {
+        startRealisticLoading();
+    }, 100);
     
     // Hide opening screen with animation
     openingScreen.style.opacity = '0';
@@ -108,16 +111,26 @@ function startRealisticLoading() {
     const percentageText = document.getElementById('loadingPercentage');
     const loadingScreen = document.getElementById('loading-screen');
     
-    // Ensure loading screen is visible
+    // Ensure loading screen is visible and properly displayed
     if (loadingScreen) {
+        loadingScreen.classList.remove('hidden');
         loadingScreen.style.display = 'flex';
         loadingScreen.style.opacity = '1';
         loadingScreen.style.visibility = 'visible';
+        loadingScreen.style.zIndex = '9999';
+    }
+    
+    // Ensure progress elements exist
+    if (progressFill) {
+        progressFill.style.width = '0%';
+    }
+    if (percentageText) {
+        percentageText.textContent = '0%';
     }
     
     let progress = 0;
-    const totalDuration = 2000; // 2 seconds total (balanced)
-    const updateInterval = 30; // Update every 30ms (smooth)
+    const totalDuration = 3000; // 3 seconds total for better visibility
+    const updateInterval = 50; // Update every 50ms (smoother)
     
     // Simple and fast loading progression
     const progressIncrement = 100 / (totalDuration / updateInterval);
@@ -125,31 +138,37 @@ function startRealisticLoading() {
     const loadingInterval = setInterval(() => {
         progress += progressIncrement;
         
-        // Add slight randomness for realism but keep it fast
-        const randomFactor = 0.95 + Math.random() * 0.1; // 0.95 to 1.05
+        // Add slight randomness for realism but keep it smooth
+        const randomFactor = 0.98 + Math.random() * 0.04; // 0.98 to 1.02
         const actualProgress = Math.min(progress * randomFactor, 100);
         
         // Update UI
-        progressFill.style.width = actualProgress + '%';
-        percentageText.textContent = Math.round(actualProgress) + '%';
+        if (progressFill) {
+            progressFill.style.width = actualProgress + '%';
+        }
+        if (percentageText) {
+            percentageText.textContent = Math.round(actualProgress) + '%';
+        }
         
         // Check if loading is complete
         if (actualProgress >= 100) {
             clearInterval(loadingInterval);
             
-            // Hide loading screen and show main content quickly
+            // Hide loading screen and show main content
         setTimeout(() => {
+                if (loadingScreen) {
             loadingScreen.style.opacity = '0';
             setTimeout(() => {
-                    loadingScreen.classList.add('hidden');
-                    loadingScreen.style.display = 'none'; // Force hide
-                    loadingScreen.style.visibility = 'hidden'; // Force hide
+                        loadingScreen.classList.add('hidden');
+                loadingScreen.style.display = 'none';
+                        loadingScreen.style.visibility = 'hidden';
                 // Start all other functions
                 startMainFeatures();
-                    // Reset loading flag
-                    isLoading = false;
-                }, 150); // Faster transition
-            }, 50); // Faster transition
+                        // Reset loading flag
+                        isLoading = false;
+                    }, 300); // Slower transition for better visibility
+                }
+            }, 200); // Delay before hiding
         }
     }, updateInterval);
 }
@@ -185,12 +204,14 @@ function startMainFeatures() {
         if (window.musicButton) {
             window.musicButton.style.opacity = '1';
             window.musicButton.style.visibility = 'visible';
+            window.musicButton.style.pointerEvents = 'auto';
         }
         if (window.scrollToTopBtn) {
             window.scrollToTopBtn.style.opacity = '1';
             window.scrollToTopBtn.style.visibility = 'visible';
+            window.scrollToTopBtn.style.pointerEvents = 'auto';
         }
-    }, 500);
+    }, 100);
 }
 
 // Update current time
@@ -834,13 +855,14 @@ function addMusicPlayer() {
         color: white;
         font-size: 20px;
         cursor: pointer;
-        z-index: 1000;
+        z-index: 10000;
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
         opacity: 0;
         visibility: hidden;
         touch-action: manipulation;
         -webkit-tap-highlight-color: transparent;
+        pointer-events: auto;
     `;
     
     let isPlaying = false;
@@ -1595,8 +1617,8 @@ function addScrollToTopButton() {
     scrollToTopBtn.setAttribute('title', 'Scroll to Top');
     scrollToTopBtn.style.cssText = `
         position: fixed;
-        top: 20px;
-        left: 20px;
+        bottom: 20px;
+        right: 20px;
         width: 50px;
         height: 50px;
         border-radius: 50%;
@@ -1609,10 +1631,11 @@ function addScrollToTopButton() {
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
-        z-index: 1000;
+        z-index: 10000;
         box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
         touch-action: manipulation;
         -webkit-tap-highlight-color: transparent;
+        pointer-events: auto;
     `;
     
     // Handle both click and touch events for better mobile compatibility
