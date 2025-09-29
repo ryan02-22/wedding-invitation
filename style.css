@@ -5,9 +5,25 @@
     box-sizing: border-box;
 }
 
+/* Performance Optimizations */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Hardware Acceleration for Animations */
+.animated, .fade-in-up, .fade-in-left, .fade-in-right, .fade-in-scale, .fade-in-rotate {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
 /* Smooth Scroll */
 html {
     scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Scroll Progress Bar */
@@ -1955,53 +1971,54 @@ body::before {
 
 @keyframes floatPetals {
     0% {
-        transform: translateY(100vh) rotate(0deg) scale(0);
+        transform: translate3d(0, 100vh, 0) rotate(0deg) scale(0);
         opacity: 0;
     }
     10% {
         opacity: 0.7;
-        transform: scale(1);
+        transform: translate3d(0, 90vh, 0) rotate(36deg) scale(1);
     }
     90% {
         opacity: 0.7;
+        transform: translate3d(0, 10vh, 0) rotate(324deg) scale(1);
     }
     100% {
-        transform: translateY(-100px) rotate(360deg) scale(0);
+        transform: translate3d(0, -100px, 0) rotate(360deg) scale(0);
         opacity: 0;
     }
 }
 
-/* Animations */
+/* Optimized Animations with Hardware Acceleration */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translate3d(0, 30px, 0);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
 @keyframes slideInUp {
     from {
         opacity: 0;
-        transform: translateY(50px);
+        transform: translate3d(0, 50px, 0);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
 @keyframes slideInRight {
     from {
         opacity: 0;
-        transform: translateX(100px);
+        transform: translate3d(100px, 0, 0);
     }
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -2171,10 +2188,6 @@ body::before {
         max-width: 250px;
     }
     
-    .gallery-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-    }
     
     .map-buttons {
         flex-direction: column;
@@ -2230,6 +2243,71 @@ body::before {
     .scroll-to-top {
         bottom: 20px;
         right: 20px;
+        width: 50px;
+        height: 50px;
+    }
+    
+    /* Mobile Performance Optimizations */
+    .floating-petals {
+        display: none; /* Disable on mobile to prevent lag */
+    }
+    
+    .petal {
+        display: none; /* Disable on mobile */
+    }
+    
+    /* Reduce animation complexity on mobile */
+    .fade-in-up, .fade-in-left, .fade-in-right, .fade-in-scale {
+        animation-duration: 0.6s; /* Faster animations on mobile */
+    }
+    
+    /* Optimize loading screen for mobile */
+    .loading-content {
+        padding: 20px;
+    }
+    
+    .loading-title {
+        font-size: 2rem;
+    }
+    
+    .loading-subtitle {
+        font-size: 1rem;
+    }
+    
+    /* Touch-friendly buttons */
+    .rsvp-btn, .map-btn, .save-calendar-btn, .theme-btn {
+        min-height: 48px; /* Minimum touch target size */
+        padding: 12px 20px;
+    }
+    
+    /* Optimize gallery for mobile */
+    
+    .gallery-item {
+        aspect-ratio: 1;
+    }
+    
+    /* Reduce shadows and effects on mobile for better performance */
+    .wish-item, .rsvp-section, .gallery-item {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Optimize admin panel for mobile */
+    .admin-panel {
+        padding: 15px;
+        margin: 10px;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .analytics-card {
+        padding: 15px;
+    }
+    
+    /* Music player mobile optimization */
+    .music-player {
         width: 45px;
         height: 45px;
         font-size: 16px;
@@ -2239,20 +2317,63 @@ body::before {
     .loading-title {
         font-size: 3rem;
     }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
     
-    .loading-subtitle {
-        font-size: 1.2rem;
-        letter-spacing: 6px;
+    .analytics-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    .loading-wait-text {
-        font-size: 0.8rem;
-        letter-spacing: 2px;
+    .theme-options {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
     }
     
-    .loading-content {
-        max-width: 350px;
-        padding: 0 20px;
+    .theme-btn {
+        width: auto;
+        min-width: 120px;
+    }
+    
+    /* Reduce floating petals on tablet */
+    .petal:nth-child(n+6) {
+        display: none;
+    }
+}
+
+/* Desktop Optimizations */
+@media (min-width: 1025px) {
+    /* Enable all animations on desktop */
+    .floating-petals {
+        display: block;
+    }
+    
+    .petal {
+        display: block;
+    }
+    
+    /* Full gallery on desktop */
+    
+    /* Full analytics on desktop */
+    .analytics-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .analytics-charts {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Hover effects only on desktop */
+    .wish-item:hover, .gallery-item:hover, .rsvp-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    /* Desktop-specific animations */
+    .fade-in-up, .fade-in-left, .fade-in-right, .fade-in-scale {
+        animation-duration: 0.8s;
     }
 }
 

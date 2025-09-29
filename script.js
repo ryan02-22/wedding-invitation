@@ -1,3 +1,34 @@
+// Performance Optimizations
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const isLowEndDevice = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2;
+
+// Throttle function for scroll events
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    }
+}
+
+// Debounce function for resize events
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 // Play opening music
 function playOpeningMusic() {
     const openingAudio = new Audio('assets/music/opening.mp3');
@@ -6,7 +37,7 @@ function playOpeningMusic() {
     
     // Try to play, but don't force it
     openingAudio.play().catch(e => {
-        console.log('Opening music autoplay blocked:', e);
+        // Opening music autoplay blocked
     });
 }
 
@@ -110,6 +141,14 @@ function startMainFeatures() {
     checkExistingRSVP();
     loadWishes(); // Load existing wishes
     initializeAnalyticsAndTheme(); // Initialize analytics and theme
+    
+    // Initialize additional features
+    initializeScrollAnimations();
+    initializeScrollIndicator();
+    initializeScrollProgress();
+    createFloatingElements();
+    addScrollToTopButton();
+    initializeBackgroundMusic();
 }
 
 // Update current time
@@ -240,6 +279,15 @@ setInterval(createFloatingHeart, 2000);
 
 // Floating Petals Animation
 function createFloatingPetal() {
+    // Skip on low-end devices or mobile to prevent lag
+    if (isLowEndDevice || isMobile) return;
+    
+    const floatingContainer = document.querySelector('.floating-petals');
+    if (!floatingContainer) return;
+    
+    // Limit number of petals to prevent performance issues
+    if (floatingContainer.children.length >= 8) return;
+    
     const petal = document.createElement('div');
     petal.className = 'petal';
     petal.style.left = Math.random() * 100 + 'vw';
@@ -247,31 +295,36 @@ function createFloatingPetal() {
     petal.style.width = (Math.random() * 8 + 8) + 'px';
     petal.style.height = petal.style.width;
     
-    document.querySelector('.floating-petals').appendChild(petal);
+    floatingContainer.appendChild(petal);
     
+    // Auto-remove after animation
     setTimeout(() => {
-        petal.remove();
+        if (petal.parentNode) {
+            petal.remove();
+        }
     }, 12000);
 }
 
-// Create floating petals periodically
-setInterval(createFloatingPetal, 3000);
+// Create floating petals periodically (less frequent on mobile)
+const petalInterval = isMobile ? 5000 : 3000;
+setInterval(createFloatingPetal, petalInterval);
 
 // RSVP Functionality
 function confirmAttendance(status) {
-    const guestName = document.getElementById('guest-name').value;
-    const guestCount = document.getElementById('guest-count').value;
-    
-    // Validasi input
-    if (!guestName.trim()) {
-        alert('Mohon isi nama lengkap Anda');
-        return;
-    }
-    
-    if (!guestCount || guestCount < 1) {
-        alert('Mohon isi jumlah tamu minimal 1');
-        return;
-    }
+    try {
+        const guestName = document.getElementById('guest-name').value;
+        const guestCount = document.getElementById('guest-count').value;
+        
+        // Validasi input
+        if (!guestName.trim()) {
+            showToast('❌ Mohon isi nama lengkap Anda', 'error');
+            return;
+        }
+        
+        if (!guestCount || guestCount < 1) {
+            showToast('❌ Mohon isi jumlah tamu minimal 1', 'error');
+            return;
+        }
     
     const buttons = document.querySelectorAll('.rsvp-btn');
     buttons.forEach(btn => {
@@ -328,22 +381,35 @@ function confirmAttendance(status) {
     
     localStorage.setItem('rsvpData', JSON.stringify(rsvpData));
     
-    // Send data to server
-    sendRSVPToServer(rsvpData);
+        // Send data to server
+        sendRSVPToServer(rsvpData);
+        
+    } catch (error) {
+        // Error in confirmAttendance
+        showToast('❌ Terjadi kesalahan saat konfirmasi', 'error');
+        
+        // Re-enable buttons on error
+        const buttons = document.querySelectorAll('.rsvp-btn');
+        buttons.forEach(btn => {
+            btn.style.opacity = '1';
+            btn.disabled = false;
+        });
+    }
 }
 
 // Send RSVP to WhatsApp
 function sendToWhatsApp(status, guestName, guestCount) {
-    const whatsappNumber = "6281234567890"; // Ganti dengan nomor WhatsApp Anda
-    const weddingDate = "15 Februari 2026";
-    const weddingLocation = "Masjid Agung Slawi, Tegal";
-    
-    let message;
-    
-    if (status === 'hadir') {
-        message = `Assalamualaikum! 
+    try {
+        const whatsappNumber = "6281234567890"; // Ganti dengan nomor WhatsApp Anda
+        const weddingDate = "15 Februari 2025";
+        const weddingLocation = "Masjid Agung Slawi, Tegal";
+        
+        let message;
+        
+        if (status === 'hadir') {
+            message = `Assalamualaikum! 
 
-Saya ${guestName} ingin konfirmasi kehadiran untuk pernikahan Ayu & Fatur.
+Saya ${guestName} ingin konfirmasi kehadiran untuk pernikahan Fatur & Simbet.
 
 📅 Tanggal: ${weddingDate}
 📍 Lokasi: ${weddingLocation}
@@ -353,10 +419,10 @@ Saya ${guestName} ingin konfirmasi kehadiran untuk pernikahan Ayu & Fatur.
 Kami akan hadir di hari bahagia kalian. Semoga pernikahan berjalan lancar! 🙏
 
 Terima kasih atas undangannya! 💕`;
-    } else {
-        message = `Assalamualaikum! 
+        } else {
+            message = `Assalamualaikum! 
 
-Saya ${guestName} ingin konfirmasi kehadiran untuk pernikahan Ayu & Fatur.
+Saya ${guestName} ingin konfirmasi kehadiran untuk pernikahan Fatur & Simbet.
 
 📅 Tanggal: ${weddingDate}
 📍 Lokasi: ${weddingLocation}
@@ -368,8 +434,13 @@ Mohon maaf, kami tidak bisa hadir di hari bahagia kalian. Semoga pernikahan berj
 Doa terbaik untuk Ayu & Fatur! 💕`;
     }
 
-    const url = `https://wa.me/6289604072195?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+        const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+        
+    } catch (error) {
+        // Error in sendToWhatsApp
+        showToast('❌ Gagal membuka WhatsApp', 'error');
+    }
 }
 
 // Copy to clipboard function
@@ -396,15 +467,15 @@ function copyToClipboard(text) {
             toast.remove();
         }, 3000);
     }).catch(function(err) {
-        console.error('Could not copy text: ', err);
-        alert('Gagal menyalin nomor rekening');
+        // Could not copy text
+        showToast('❌ Gagal menyalin nomor rekening', 'error');
     });
 }
 
 // Send RSVP to server (placeholder function)
 function sendRSVPToServer(rsvpData) {
     // This is where you would send the RSVP data to your server
-    console.log('RSVP Data:', rsvpData);
+    // RSVP Data stored
     
     // Example using fetch API (uncomment and modify as needed)
     /*
@@ -416,47 +487,70 @@ function sendRSVPToServer(rsvpData) {
         body: JSON.stringify(rsvpData)
     })
     .then(response => response.json())
-    .then(data => console.log('RSVP sent:', data))
-    .catch(error => console.error('Error:', error));
+    .then(data => {
+        // RSVP sent successfully
+    })
+    .catch(error => {
+        // Error sending RSVP
+    });
     */
 }
 
 // Wishes System
 function submitWish() {
-    const wisherName = document.getElementById('wisher-name').value;
-    const wishMessage = document.getElementById('wish-message').value;
+    try {
+        const wisherName = document.getElementById('wisher-name').value;
+        const wishMessage = document.getElementById('wish-message').value;
+        
+        // Validasi input
+        if (!wisherName.trim()) {
+            showToast('❌ Mohon isi nama Anda', 'error');
+            return;
+        }
+        
+        if (!wishMessage.trim()) {
+            showToast('❌ Mohon isi ucapan selamat', 'error');
+            return;
+        }
+        
+        if (wisherName.trim().length < 2) {
+            showToast('❌ Nama minimal 2 karakter', 'error');
+            return;
+        }
+        
+        if (wishMessage.trim().length < 10) {
+            showToast('❌ Ucapan minimal 10 karakter', 'error');
+            return;
+        }
     
-    // Validasi input
-    if (!wisherName.trim()) {
-        alert('Mohon isi nama Anda');
-        return;
+        // Buat objek wish
+        const wishData = {
+            name: wisherName.trim(),
+            message: wishMessage.trim(),
+            timestamp: new Date().toISOString(),
+            id: Date.now() // Unique ID
+        };
+        
+        // Simpan ke localStorage
+        saveWishToStorage(wishData);
+        
+        // Tampilkan di halaman
+        displayWish(wishData);
+        
+        // Reset form
+        document.getElementById('wisher-name').value = '';
+        document.getElementById('wish-message').value = '';
+        
+        // Show success message
+        showToast('💝 Ucapan selamat berhasil dikirim!', 'success');
+        
+        // Track wish in analytics
+        trackWish();
+        
+    } catch (error) {
+        // Error in submitWish
+        showToast('❌ Gagal mengirim ucapan selamat', 'error');
     }
-    
-    if (!wishMessage.trim()) {
-        alert('Mohon isi ucapan selamat');
-        return;
-    }
-    
-    // Buat objek wish
-    const wishData = {
-        name: wisherName.trim(),
-        message: wishMessage.trim(),
-        timestamp: new Date().toISOString(),
-        id: Date.now() // Unique ID
-    };
-    
-    // Simpan ke localStorage
-    saveWishToStorage(wishData);
-    
-    // Tampilkan di halaman
-    displayWish(wishData);
-    
-    // Reset form
-    document.getElementById('wisher-name').value = '';
-    document.getElementById('wish-message').value = '';
-    
-    // Show success message
-    showToast('💝 Ucapan selamat berhasil dikirim!', 'success');
 }
 
 // Save wish to localStorage
@@ -727,7 +821,7 @@ function addMusicPlayer() {
                 audio = window.backgroundAudio;
                 audio.volume = 0.3; // Volume 30% agar tidak mengganggu
                 audio.play().catch(e => {
-                    console.log('Audio autoplay blocked:', e);
+                    // Audio autoplay blocked
                     // Fallback jika autoplay diblokir browser
                     musicButton.innerHTML = '🎵';
                     isPlaying = false;
@@ -738,7 +832,7 @@ function addMusicPlayer() {
                 audio.loop = true;
                 audio.volume = 0.3;
                 audio.play().catch(e => {
-                    console.log('Audio autoplay blocked:', e);
+                    // Audio autoplay blocked
                     musicButton.innerHTML = '🎵';
                     isPlaying = false;
                 });
@@ -786,39 +880,50 @@ let currentTheme = 'brown';
 
 // Toggle Admin Mode
 function toggleAdminMode() {
-    isAdminMode = !isAdminMode;
-    const adminPanel = document.getElementById('admin-panel');
-    const adminToggleBtn = document.querySelector('.admin-toggle-btn');
-    
-    if (isAdminMode) {
-        adminPanel.style.display = 'block';
-        adminToggleBtn.innerHTML = '<i class="fas fa-cog"></i> Keluar dari Mode Admin';
-        adminToggleBtn.style.background = '#ff6b6b';
-        adminToggleBtn.style.borderColor = '#ff6b6b';
-        adminToggleBtn.style.color = 'white';
+    try {
+        isAdminMode = !isAdminMode;
+        const adminPanel = document.getElementById('admin-panel');
+        const adminToggleBtn = document.querySelector('.admin-toggle-btn');
         
-        // Add admin mode class to all wish items
-        document.querySelectorAll('.wish-item').forEach(item => {
-            item.classList.add('admin-mode');
-            item.addEventListener('click', handleWishDelete);
-        });
+        if (!adminPanel || !adminToggleBtn) {
+            showToast('❌ Elemen admin tidak ditemukan', 'error');
+            return;
+        }
         
-        showToast('🔧 Mode Admin aktif - Klik ucapan untuk menghapus', 'info');
-        updateAnalytics();
-    } else {
-        adminPanel.style.display = 'none';
-        adminToggleBtn.innerHTML = '<i class="fas fa-cog"></i> Mode Admin';
-        adminToggleBtn.style.background = 'rgba(139, 69, 19, 0.1)';
-        adminToggleBtn.style.borderColor = '#8B4513';
-        adminToggleBtn.style.color = '#8B4513';
+        if (isAdminMode) {
+            adminPanel.style.display = 'block';
+            adminToggleBtn.innerHTML = '<i class="fas fa-cog"></i> Keluar dari Mode Admin';
+            adminToggleBtn.style.background = '#ff6b6b';
+            adminToggleBtn.style.borderColor = '#ff6b6b';
+            adminToggleBtn.style.color = 'white';
+            
+            // Add admin mode class to all wish items
+            document.querySelectorAll('.wish-item').forEach(item => {
+                item.classList.add('admin-mode');
+                item.addEventListener('click', handleWishDelete);
+            });
+            
+            showToast('🔧 Mode Admin aktif - Klik ucapan untuk menghapus', 'info');
+            updateAnalytics();
+        } else {
+            adminPanel.style.display = 'none';
+            adminToggleBtn.innerHTML = '<i class="fas fa-cog"></i> Mode Admin';
+            adminToggleBtn.style.background = 'rgba(139, 69, 19, 0.1)';
+            adminToggleBtn.style.borderColor = '#8B4513';
+            adminToggleBtn.style.color = '#8B4513';
+            
+            // Remove admin mode class from all wish items
+            document.querySelectorAll('.wish-item').forEach(item => {
+                item.classList.remove('admin-mode');
+                item.removeEventListener('click', handleWishDelete);
+            });
+            
+            showToast('✅ Mode Admin dinonaktifkan', 'success');
+        }
         
-        // Remove admin mode class from all wish items
-        document.querySelectorAll('.wish-item').forEach(item => {
-            item.classList.remove('admin-mode');
-            item.removeEventListener('click', handleWishDelete);
-        });
-        
-        showToast('✅ Mode Admin dinonaktifkan', 'success');
+    } catch (error) {
+        // Error in toggleAdminMode
+        showToast('❌ Gagal mengubah mode admin', 'error');
     }
 }
 
@@ -934,6 +1039,7 @@ function saveToCalendar() {
     document.body.appendChild(calendarOptions);
     
     showToast('📅 Pilih kalender untuk menyimpan acara', 'info');
+    trackCalendarSave(); // Track analytics
 }
 
 // Download ICS file
@@ -966,33 +1072,72 @@ END:VCALENDAR`;
 
 // Maps Functions
 function openGoogleMaps() {
-    const address = 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal';
-    const url = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
-    window.open(url, '_blank');
-    showToast('🗺️ Membuka Google Maps...', 'info');
+    try {
+        const address = 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal';
+        const url = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+        window.open(url, '_blank');
+        showToast('🗺️ Membuka Google Maps...', 'info');
+        trackCalendarSave(); // Track analytics
+    } catch (error) {
+        // Error opening Google Maps
+        showToast('❌ Gagal membuka Google Maps', 'error');
+    }
 }
 
 function openWaze() {
-    const address = 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal';
-    const url = `https://waze.com/ul?q=${encodeURIComponent(address)}`;
-    window.open(url, '_blank');
-    showToast('🚗 Membuka Waze...', 'info');
+    try {
+        const address = 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal';
+        const url = `https://waze.com/ul?q=${encodeURIComponent(address)}`;
+        window.open(url, '_blank');
+        showToast('🚗 Membuka Waze...', 'info');
+        trackCalendarSave(); // Track analytics
+    } catch (error) {
+        // Error opening Waze
+        showToast('❌ Gagal membuka Waze', 'error');
+    }
 }
 
 function copyAddress() {
-    const address = 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal';
-    navigator.clipboard.writeText(address).then(() => {
-        showToast('📋 Alamat berhasil disalin!', 'success');
-    }).catch(() => {
-        // Fallback for older browsers
-        const textArea = document.createElement('textarea');
-        textArea.value = address;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        showToast('📋 Alamat berhasil disalin!', 'success');
-    });
+    try {
+        const address = 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal';
+        
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(address).then(() => {
+                showToast('📋 Alamat berhasil disalin!', 'success');
+            }).catch(() => {
+                fallbackCopyTextToClipboard(address);
+            });
+        } else {
+            fallbackCopyTextToClipboard(address);
+        }
+    } catch (error) {
+        // Error copying address
+        showToast('❌ Gagal menyalin alamat', 'error');
+    }
+}
+
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showToast('📋 Alamat berhasil disalin!', 'success');
+        } else {
+            showToast('❌ Gagal menyalin alamat', 'error');
+        }
+    } catch (err) {
+        showToast('❌ Gagal menyalin alamat', 'error');
+    }
+    
+    document.body.removeChild(textArea);
 }
 
 // Add confetti effect on page load
@@ -1178,29 +1323,44 @@ function drawHourlyChart() {
 
 // Theme Functions
 function changeTheme(theme) {
-    currentTheme = theme;
-    
-    // Remove existing theme classes
-    document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green', 'theme-purple');
-    
-    // Add new theme class
-    if (theme !== 'brown') {
-        document.body.classList.add(`theme-${theme}`);
+    try {
+        if (!theme) {
+            showToast('❌ Tema tidak valid', 'error');
+            return;
+        }
+        
+        currentTheme = theme;
+        
+        // Remove existing theme classes
+        document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green', 'theme-purple');
+        
+        // Add new theme class
+        if (theme !== 'brown') {
+            document.body.classList.add(`theme-${theme}`);
+        }
+        
+        // Update active button
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        const activeButton = document.querySelector(`[data-theme="${theme}"]`);
+        if (activeButton) {
+            activeButton.classList.add('active');
+        }
+        
+        // Save theme preference
+        localStorage.setItem('selectedTheme', theme);
+        
+        // Apply theme colors
+        applyThemeColors(theme);
+        
+        showToast(`🎨 Tema ${theme} berhasil diterapkan!`, 'success');
+        
+    } catch (error) {
+        // Error in changeTheme
+        showToast('❌ Gagal mengubah tema', 'error');
     }
-    
-    // Update active button
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
-    
-    // Save theme preference
-    localStorage.setItem('selectedTheme', theme);
-    
-    // Apply theme colors
-    applyThemeColors(theme);
-    
-    showToast(`🎨 Tema ${theme} berhasil diterapkan!`, 'success');
 }
 
 function applyThemeColors(theme) {
@@ -1377,14 +1537,21 @@ function initializeScrollIndicator() {
 // Scroll Progress Bar
 function initializeScrollProgress() {
     const progressBar = document.querySelector('.scroll-progress');
+    if (!progressBar) return;
     
-    window.addEventListener('scroll', () => {
+    // Throttled scroll handler for better performance
+    const updateProgress = throttle(() => {
         const scrollTop = window.pageYOffset;
         const docHeight = document.body.scrollHeight - window.innerHeight;
-        const scrollPercent = (scrollTop / docHeight) * 100;
+        const scrollPercent = Math.min((scrollTop / docHeight) * 100, 100);
         
-        progressBar.style.width = scrollPercent + '%';
-    });
+        // Use requestAnimationFrame for smooth updates
+        requestAnimationFrame(() => {
+            progressBar.style.width = scrollPercent + '%';
+        });
+    }, 16); // ~60fps
+    
+    window.addEventListener('scroll', updateProgress, { passive: true });
 }
 
 // Enhanced Loading Animation
