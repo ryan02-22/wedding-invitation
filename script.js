@@ -64,14 +64,20 @@ function openInvitation() {
 }
 
 // Realistic Loading Animation
+let isLoading = false; // Flag to prevent multiple loading screens
+
 function startRealisticLoading() {
+    // Prevent multiple loading screens
+    if (isLoading) return;
+    isLoading = true;
+    
     const progressFill = document.getElementById('loadingProgressFill');
     const percentageText = document.getElementById('loadingPercentage');
     const loadingScreen = document.getElementById('loading-screen');
     
     let progress = 0;
-    const totalDuration = 1200; // 1.2 seconds total (much faster)
-    const updateInterval = 20; // Update every 20ms (smoother)
+    const totalDuration = 2000; // 2 seconds total (balanced)
+    const updateInterval = 30; // Update every 30ms (smooth)
     
     // Simple and fast loading progression
     const progressIncrement = 100 / (totalDuration / updateInterval);
@@ -98,6 +104,8 @@ function startRealisticLoading() {
                     loadingScreen.classList.add('hidden');
                 // Start all other functions
                 startMainFeatures();
+                    // Reset loading flag
+                    isLoading = false;
                 }, 150); // Faster transition
             }, 50); // Faster transition
         }
@@ -106,10 +114,10 @@ function startRealisticLoading() {
 
 // Start main features after opening screen
 function startMainFeatures() {
+    // Only call updateCountdown once, not in interval
     updateCountdown();
     updateCurrentTime();
     createFloatingHeart();
-    addScrollAnimations();
     addMusicPlayer();
     checkExistingRSVP();
     loadWishes(); // Load existing wishes
