@@ -31,15 +31,28 @@ function debounce(func, wait) {
 
 // Play opening music
 function playOpeningMusic() {
-    const openingAudio = new Audio('musik.mp3');
-    openingAudio.volume = 0.6; // Increased volume for better clarity
-    openingAudio.loop = false;
-    openingAudio.preload = 'auto'; // Preload for better performance
-    
-    // Try to play, but don't force it
-    openingAudio.play().catch(e => {
-        // Opening music autoplay blocked - this is normal on mobile
-    });
+    // Use global audio if available, otherwise create one
+    if (window.backgroundAudio) {
+        // Pause background music if playing
+        if (!window.backgroundAudio.paused) {
+            window.backgroundAudio.pause();
+        }
+        window.backgroundAudio.currentTime = 0; // Reset to beginning
+        window.backgroundAudio.volume = 0.6; // Higher volume for opening
+        window.backgroundAudio.loop = false; // Don't loop for opening
+        window.backgroundAudio.play().catch(e => {
+            // Opening music autoplay blocked - this is normal on mobile
+        });
+    } else {
+        // Create global audio for opening
+        window.backgroundAudio = new Audio('musik.mp3');
+        window.backgroundAudio.volume = 0.6;
+        window.backgroundAudio.loop = false;
+        window.backgroundAudio.preload = 'auto';
+        window.backgroundAudio.play().catch(e => {
+            // Opening music autoplay blocked - this is normal on mobile
+        });
+    }
 }
 
 // Opening Screen Function
@@ -767,69 +780,85 @@ document.querySelectorAll('.gallery-item img').forEach(img => {
 function addMusicPlayer() {
     const musicButton = document.createElement('button');
     musicButton.innerHTML = '🎵';
+    musicButton.className = 'music-player-btn';
     musicButton.style.cssText = `
         position: fixed;
-        bottom: 90px;
+        bottom: 100px;
         right: 20px;
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
         border-radius: 50%;
         border: none;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
+        background: linear-gradient(135deg, #FFB6C1, #F8BBD9);
         color: white;
-        font-size: 24px;
+        font-size: 22px;
         cursor: pointer;
-        z-index: 100;
+        z-index: 1000;
         transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+        opacity: 0;
+        visibility: hidden;
     `;
     
     let isPlaying = false;
     let audio = null;
     
-    musicButton.addEventListener('click', () => {
+    musicButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        try {
         if (!isPlaying) {
-            // Use global background audio if available
-            if (window.backgroundAudio) {
-                audio = window.backgroundAudio;
-                audio.volume = 0.5; // Increased volume for better clarity
-                audio.play().catch(e => {
-                    // Audio autoplay blocked
-                    musicButton.innerHTML = '🎵';
-                    isPlaying = false;
-                });
-            } else {
-                // Fallback: create new audio
-                audio = new Audio('musik.mp3');
-                audio.loop = true;
-                audio.volume = 0.5; // Increased volume for better clarity
-                audio.preload = 'auto';
-                audio.play().catch(e => {
-                    // Audio autoplay blocked
-                    musicButton.innerHTML = '🎵';
-                    isPlaying = false;
-                });
-            }
+                // Use global background audio if available, otherwise create one
+                if (window.backgroundAudio) {
+                    audio = window.backgroundAudio;
+                } else {
+                    // Create global audio if not exists
+                    window.backgroundAudio = new Audio('musik.mp3');
+                    window.backgroundAudio.loop = true;
+                    window.backgroundAudio.volume = 0.4;
+                    window.backgroundAudio.preload = 'auto';
+                    audio = window.backgroundAudio;
+                }
+                
+                audio.volume = 0.5; // Set volume for music player
+                audio.play().then(() => {
             musicButton.innerHTML = '🔇';
             isPlaying = true;
+                }).catch(e => {
+                    // Audio autoplay blocked
+                    musicButton.innerHTML = '🎵';
+                    isPlaying = false;
+                    showToast('Klik tombol musik untuk memutar audio', 'info');
+                });
         } else {
-            if (audio) {
-                audio.pause();
-            }
+                if (audio) {
+                    audio.pause();
+                }
             musicButton.innerHTML = '🎵';
             isPlaying = false;
+            }
+        } catch (error) {
+            musicButton.innerHTML = '🎵';
+            isPlaying = false;
+            showToast('Error memutar audio', 'error');
         }
     });
     
     musicButton.addEventListener('mouseenter', () => {
-        musicButton.style.transform = 'scale(1.1)';
+        musicButton.style.transform = 'scale(1.1) translateY(-2px)';
+        musicButton.style.boxShadow = '0 6px 20px rgba(255, 182, 193, 0.4)';
     });
     
     musicButton.addEventListener('mouseleave', () => {
-        musicButton.style.transform = 'scale(1)';
+        musicButton.style.transform = 'scale(1) translateY(0)';
+        musicButton.style.boxShadow = '0 4px 15px rgba(255, 182, 193, 0.3)';
     });
     
     document.body.appendChild(musicButton);
+    
+    // Store button globally for unified scroll handler
+    window.musicButton = musicButton;
 }
 
 // Music player is initialized in startMainFeatures()
@@ -1445,7 +1474,7 @@ function initializeScrollAnimations() {
     }, observerOptions);
 
     // Observe all elements with animation classes
-    const animatedElements = document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right, .fade-in-scale, .fade-in-rotate');
+    const animatedElements = document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right, .fade-in-scale, .fade-in-rotate, .gallery-item');
     animatedElements.forEach(el => {
         observer.observe(el);
     });
@@ -1513,19 +1542,20 @@ function scrollToTop() {
 // Add scroll to top button
 function addScrollToTopButton() {
     const scrollToTopBtn = document.createElement('button');
-    scrollToTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    scrollToTopBtn.innerHTML = '↑';
     scrollToTopBtn.className = 'scroll-to-top';
     scrollToTopBtn.style.cssText = `
         position: fixed;
         bottom: 30px;
-        right: 30px;
+        right: 20px;
         width: 50px;
         height: 50px;
         border-radius: 50%;
         background: linear-gradient(135deg, #FFB6C1, #F8BBD9);
         border: none;
         color: white;
-        font-size: 18px;
+        font-size: 20px;
+        font-weight: bold;
         cursor: pointer;
         opacity: 0;
         visibility: hidden;
@@ -1534,7 +1564,22 @@ function addScrollToTopButton() {
         box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
     `;
     
-    scrollToTopBtn.addEventListener('click', scrollToTop);
+    scrollToTopBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        scrollToTop();
+    });
+    
+    scrollToTopBtn.addEventListener('mouseenter', () => {
+        scrollToTopBtn.style.transform = 'scale(1.1) translateY(-2px)';
+        scrollToTopBtn.style.boxShadow = '0 6px 20px rgba(255, 182, 193, 0.4)';
+    });
+    
+    scrollToTopBtn.addEventListener('mouseleave', () => {
+        scrollToTopBtn.style.transform = 'scale(1) translateY(0)';
+        scrollToTopBtn.style.boxShadow = '0 4px 15px rgba(255, 182, 193, 0.3)';
+    });
+    
     document.body.appendChild(scrollToTopBtn);
 
     // Store button globally for unified scroll handler
@@ -1543,15 +1588,21 @@ function addScrollToTopButton() {
 
 // Background Music Player
 function initializeBackgroundMusic() {
-    const backgroundAudio = new Audio('musik.mp3');
-    backgroundAudio.volume = 0.4; // Increased volume for better clarity
-    backgroundAudio.loop = true;
-    backgroundAudio.preload = 'auto'; // Preload for better performance
+    // Only create if not already exists
+    if (!window.backgroundAudio) {
+        window.backgroundAudio = new Audio('musik.mp3');
+        window.backgroundAudio.volume = 0.4; // Increased volume for better clarity
+        window.backgroundAudio.loop = true;
+        window.backgroundAudio.preload = 'auto'; // Preload for better performance
+    }
     
     // Multiple user interaction triggers for mobile compatibility
     const playAudio = () => {
-        if (backgroundAudio.paused) {
-            backgroundAudio.play().catch(e => {
+        if (window.backgroundAudio.paused) {
+            // Set to background music mode
+            window.backgroundAudio.volume = 0.4;
+            window.backgroundAudio.loop = true;
+            window.backgroundAudio.play().catch(e => {
                 // Background music autoplay blocked
             });
         }
@@ -1561,9 +1612,6 @@ function initializeBackgroundMusic() {
     document.addEventListener('click', playAudio, { once: true });
     document.addEventListener('touchstart', playAudio, { once: true });
     document.addEventListener('keydown', playAudio, { once: true });
-    
-    // Store audio globally for music player control
-    window.backgroundAudio = backgroundAudio;
 }
 
 // Unified Scroll Handler
@@ -1617,6 +1665,17 @@ function initializeUnifiedScrollHandler() {
             } else {
                 window.scrollToTopBtn.style.opacity = '0';
                 window.scrollToTopBtn.style.visibility = 'hidden';
+            }
+        }
+        
+        // Music Button
+        if (window.musicButton) {
+            if (scrollY > 100) {
+                window.musicButton.style.opacity = '1';
+                window.musicButton.style.visibility = 'visible';
+            } else {
+                window.musicButton.style.opacity = '0';
+                window.musicButton.style.visibility = 'hidden';
             }
         }
     }, 16); // ~60fps

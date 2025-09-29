@@ -167,6 +167,7 @@ body::before {
     align-items: center;
     z-index: 9998; /* Lower than loading screen */
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    overflow: hidden; /* Prevent scrolling on opening screen */
 }
 
 #opening-screen.hidden {
@@ -370,6 +371,8 @@ body::before {
     overflow: hidden;
     font-family: 'Poppins', sans-serif;
     pointer-events: none; /* Allow clicks to pass through */
+    /* Prevent scrolling on loading screen */
+    -webkit-overflow-scrolling: touch;
 }
 
 #loading-screen.hidden {
@@ -1323,6 +1326,12 @@ body::before {
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInSlow 1.2s ease-out forwards;
+    /* Ensure gallery item is visible when visible class is added */
+}
+
+.gallery-item.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .gallery-item:nth-child(1) { animation-delay: 0.2s; }
@@ -1363,6 +1372,8 @@ body::before {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    display: block; /* Ensure image is displayed */
+    opacity: 1; /* Ensure image is visible */
 }
 
 .gallery-item:hover img {
@@ -2172,6 +2183,36 @@ body::before {
     transform: translateY(-1px);
 }
 
+/* Music Player Button */
+.music-player-btn {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFB6C1, #F8BBD9);
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+    opacity: 0;
+    visibility: hidden;
+}
+
+.music-player-btn:hover {
+    transform: scale(1.1) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 182, 193, 0.4);
+    background: linear-gradient(135deg, #F8BBD9, #FFC0CB);
+}
+
+.music-player-btn:active {
+    transform: scale(1.05) translateY(-1px);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -2283,6 +2324,15 @@ body::before {
         right: 20px;
         width: 50px;
         height: 50px;
+    }
+    
+    /* Music Player Button Mobile */
+    .music-player-btn {
+        bottom: 80px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
     }
     
     /* Mobile Performance Optimizations */
