@@ -34,11 +34,14 @@ Undangan pernikahan digital yang modern dan interaktif untuk Ayu & Fatur. Dibang
 
 ## 🚀 Fitur Utama
 
-### 1. **Opening Screen (Layar Pembuka)**
+### 1. **Opening Screen & Loading (Layar Pembuka & Loading)**
 - Animasi amplop yang menarik dengan efek romantic glow
-- Floating petals dengan warna rose gold dan blush pink
+- **Realistic Loading Screen** - Progress bar dengan persentase real-time
+- **Elegant Typography** - "Open" dengan font Dancing Script dan "INVITATION" dengan Playfair Display
+- **Gradient Text Effects** - Text dengan gradient dari dark blue ke light grey
+- **Smooth Animations** - Fade-in bertahap untuk setiap elemen
+- **Realistic Progress** - Loading dengan kecepatan bervariasi dan randomness
 - Transisi smooth ke halaman utama
-- Loading screen dengan animasi hati
 - Gentle glow effect untuk konten pembuka
 
 ### 2. **Countdown Timer Real-time**

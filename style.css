@@ -313,15 +313,17 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #F5E6D3 0%, #F0E6D2 25%, #E6D7C3 50%, #D4C4B0 75%, #C4B5A0 100%);
+    background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 50%, #DEE2E6 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
     transition: opacity 0.5s ease-out;
     overflow: hidden;
+    font-family: 'Poppins', sans-serif;
 }
 
+/* Subtle background pattern */
 #loading-screen::before {
     content: '';
     position: absolute;
@@ -330,28 +332,182 @@ body::before {
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(circle at 20% 80%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 192, 203, 0.2) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(248, 187, 217, 0.15) 0%, transparent 50%);
-    animation: loadingBg 3s ease-in-out infinite;
+        radial-gradient(circle at 20% 80%, rgba(52, 152, 219, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(44, 62, 80, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(127, 140, 141, 0.03) 0%, transparent 50%);
+    animation: loadingBgPulse 4s ease-in-out infinite;
 }
 
-@keyframes loadingBg {
+@keyframes loadingBgPulse {
     0%, 100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 0.7;
+        opacity: 0.5;
+        transform: scale(1);
     }
     50% {
-        transform: scale(1.1) rotate(180deg);
-        opacity: 1;
+        opacity: 0.8;
+        transform: scale(1.05);
     }
 }
+
 
 .loading-content {
     text-align: center;
-    color: #5D4E37;
+    color: #2C3E50;
     position: relative;
     z-index: 2;
+    max-width: 400px;
+    width: 90%;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: loadingContentFadeIn 0.8s ease-out 0.3s forwards;
+}
+
+@keyframes loadingContentFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading Title - "Open" */
+.loading-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 4rem;
+    font-weight: 700;
+    margin: 0;
+    background: linear-gradient(90deg, #2C3E50 0%, #7F8C8D 50%, #BDC3C7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: titleFadeIn 1s ease-out 0.5s forwards;
+}
+
+@keyframes titleFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Loading Subtitle - "INVITATION" */
+.loading-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    letter-spacing: 8px;
+    margin: 0;
+    background: linear-gradient(90deg, #2C3E50 0%, #7F8C8D 50%, #BDC3C7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: subtitleFadeIn 0.8s ease-out 0.8s forwards;
+}
+
+@keyframes subtitleFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading Text - "PLEASE WAIT" */
+.loading-wait-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    letter-spacing: 3px;
+    color: #7F8C8D;
+    margin: 0 0 40px 0;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: waitTextFadeIn 0.6s ease-out 1.1s forwards;
+}
+
+@keyframes waitTextFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Progress Bar Container */
+.loading-progress-container {
+    width: 100%;
+    margin-bottom: 15px;
+    opacity: 0;
+    animation: progressContainerFadeIn 0.6s ease-out 1.4s forwards;
+}
+
+@keyframes progressContainerFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Progress Bar */
+.loading-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #E9ECEF;
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loading-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2C3E50 0%, #3498DB 100%);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.loading-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+    animation: progressShimmer 2s infinite;
+}
+
+@keyframes progressShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Progress Percentage */
+.loading-percentage {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #7F8C8D;
+    margin: 0;
 }
 
 .loading-hearts {
@@ -2077,6 +2233,26 @@ body::before {
         width: 45px;
         height: 45px;
         font-size: 16px;
+    }
+    
+    /* Loading Screen Mobile */
+    .loading-title {
+        font-size: 3rem;
+    }
+    
+    .loading-subtitle {
+        font-size: 1.2rem;
+        letter-spacing: 6px;
+    }
+    
+    .loading-wait-text {
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+    }
+    
+    .loading-content {
+        max-width: 350px;
+        padding: 0 20px;
     }
 }
 

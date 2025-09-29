@@ -1,7 +1,22 @@
+// Play opening music
+function playOpeningMusic() {
+    const openingAudio = new Audio('assets/music/opening.mp3');
+    openingAudio.volume = 0.4;
+    openingAudio.loop = false;
+    
+    // Try to play, but don't force it
+    openingAudio.play().catch(e => {
+        console.log('Opening music autoplay blocked:', e);
+    });
+}
+
 // Opening Screen Function
 function openInvitation() {
     const openingScreen = document.getElementById('opening-screen');
     const loadingScreen = document.getElementById('loading-screen');
+    
+    // Play opening music
+    playOpeningMusic();
     
     // Hide opening screen with animation
     openingScreen.style.opacity = '0';
@@ -12,16 +27,77 @@ function openInvitation() {
         // Show loading screen
         loadingScreen.style.display = 'flex';
         
-        // After loading, hide loading screen and show main content
-        setTimeout(() => {
-            loadingScreen.style.opacity = '0';
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-                // Start all other functions
-                startMainFeatures();
-            }, 500);
-        }, 2000);
+        // Start realistic loading animation
+        startRealisticLoading();
     }, 800);
+}
+
+// Realistic Loading Animation
+function startRealisticLoading() {
+    const progressFill = document.getElementById('loadingProgressFill');
+    const percentageText = document.getElementById('loadingPercentage');
+    const loadingScreen = document.getElementById('loading-screen');
+    
+    let progress = 0;
+    const totalDuration = 3000; // 3 seconds total
+    const updateInterval = 50; // Update every 50ms
+    const totalSteps = totalDuration / updateInterval;
+    
+    // Simulate realistic loading with varying speeds
+    const loadingSteps = [
+        { start: 0, end: 15, speed: 0.3 },    // Slow start
+        { start: 15, end: 45, speed: 1.2 },   // Fast middle
+        { start: 45, end: 70, speed: 0.8 },   // Medium speed
+        { start: 70, end: 85, speed: 0.4 },   // Slow down
+        { start: 85, end: 95, speed: 0.2 },   // Very slow
+        { start: 95, end: 100, speed: 0.1 }   // Crawl to finish
+    ];
+    
+    let currentStep = 0;
+    let stepProgress = 0;
+    
+    const loadingInterval = setInterval(() => {
+        const currentStepData = loadingSteps[currentStep];
+        const stepRange = currentStepData.end - currentStepData.start;
+        const stepSpeed = currentStepData.speed;
+        
+        // Add some randomness to make it more realistic
+        const randomFactor = 0.8 + Math.random() * 0.4; // 0.8 to 1.2
+        const increment = (stepSpeed * randomFactor) / totalSteps;
+        
+        stepProgress += increment;
+        
+        if (stepProgress >= 1) {
+            stepProgress = 0;
+            currentStep++;
+            if (currentStep >= loadingSteps.length) {
+                currentStep = loadingSteps.length - 1;
+            }
+        }
+        
+        // Calculate current progress
+        const stepProgressValue = currentStepData.start + (stepProgress * stepRange);
+        progress = Math.min(stepProgressValue, 100);
+        
+        // Update UI
+        progressFill.style.width = progress + '%';
+        percentageText.textContent = Math.round(progress) + '%';
+        
+        // Check if loading is complete
+        if (progress >= 100) {
+            clearInterval(loadingInterval);
+            
+            // Hide loading screen and show main content
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    // Start all other functions
+                    startMainFeatures();
+                }, 500);
+            }, 300);
+        }
+    }, updateInterval);
 }
 
 // Start main features after opening screen
@@ -646,14 +722,33 @@ function addMusicPlayer() {
     
     musicButton.addEventListener('click', () => {
         if (!isPlaying) {
-            // You can add background music here
-            // audio = new Audio('path/to/your/music.mp3');
-            // audio.loop = true;
-            // audio.play();
+            // Use global background audio if available
+            if (window.backgroundAudio) {
+                audio = window.backgroundAudio;
+                audio.volume = 0.3; // Volume 30% agar tidak mengganggu
+                audio.play().catch(e => {
+                    console.log('Audio autoplay blocked:', e);
+                    // Fallback jika autoplay diblokir browser
+                    musicButton.innerHTML = '🎵';
+                    isPlaying = false;
+                });
+            } else {
+                // Fallback: create new audio
+                audio = new Audio('musik.mp3');
+                audio.loop = true;
+                audio.volume = 0.3;
+                audio.play().catch(e => {
+                    console.log('Audio autoplay blocked:', e);
+                    musicButton.innerHTML = '🎵';
+                    isPlaying = false;
+                });
+            }
             musicButton.innerHTML = '🔇';
             isPlaying = true;
         } else {
-            // audio.pause();
+            if (audio) {
+                audio.pause();
+            }
             musicButton.innerHTML = '🎵';
             isPlaying = false;
         }
@@ -1355,6 +1450,25 @@ function addScrollToTopButton() {
     });
 }
 
+// Background Music Player
+function initializeBackgroundMusic() {
+    const backgroundAudio = new Audio('assets/music/background.mp3');
+    backgroundAudio.volume = 0.2; // Volume rendah
+    backgroundAudio.loop = true;
+    
+    // Play after user interaction (to avoid autoplay restrictions)
+    document.addEventListener('click', () => {
+        if (backgroundAudio.paused) {
+            backgroundAudio.play().catch(e => {
+                console.log('Background music autoplay blocked:', e);
+            });
+        }
+    }, { once: true });
+    
+    // Store audio globally for music player control
+    window.backgroundAudio = backgroundAudio;
+}
+
 // Initialize enhanced features
 setTimeout(() => {
     initializeScrollAnimations();
@@ -1362,4 +1476,5 @@ setTimeout(() => {
     initializeScrollProgress();
     createFloatingElements();
     addScrollToTopButton();
+    initializeBackgroundMusic();
 }, 1000);
