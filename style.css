@@ -409,23 +409,24 @@ body::before {
 
 /* Loading Screen */
 #loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
     background: #F5F5F5 !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 99999;
+    background-color: #F5F5F5 !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 99999 !important;
     transition: opacity 0.5s ease-out;
-    overflow: hidden;
-    font-family: 'Poppins', sans-serif;
-    pointer-events: auto;
+    overflow: hidden !important;
+    font-family: 'Poppins', sans-serif !important;
+    pointer-events: auto !important;
     -webkit-overflow-scrolling: touch;
-    opacity: 1;
-    visibility: visible;
+    opacity: 1 !important;
+    visibility: visible !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -439,10 +440,25 @@ body::before {
 /* Clean minimal background - no patterns */
 #loading-screen::before {
     display: none !important;
+    background: none !important;
+    background-color: transparent !important;
 }
 
 #loading-screen::after {
     display: none !important;
+    background: none !important;
+    background-color: transparent !important;
+}
+
+/* Force loading screen background */
+body #loading-screen {
+    background: #F5F5F5 !important;
+    background-color: #F5F5F5 !important;
+}
+
+html body #loading-screen {
+    background: #F5F5F5 !important;
+    background-color: #F5F5F5 !important;
 }
 
 /* Removed unused background pulse animation */
@@ -2670,4 +2686,23 @@ body::before {
     .invitation-card {
         box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
     }
+}
+
+/* CRITICAL: Force loading screen background - must be at the end */
+#loading-screen {
+    background: #F5F5F5 !important;
+    background-color: #F5F5F5 !important;
+    background-image: none !important;
+}
+
+body #loading-screen {
+    background: #F5F5F5 !important;
+    background-color: #F5F5F5 !important;
+    background-image: none !important;
+}
+
+html body #loading-screen {
+    background: #F5F5F5 !important;
+    background-color: #F5F5F5 !important;
+    background-image: none !important;
 }

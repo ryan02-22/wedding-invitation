@@ -82,8 +82,11 @@ function openInvitation() {
     loadingScreen.style.display = 'flex';
     loadingScreen.style.opacity = '1';
     loadingScreen.style.visibility = 'visible';
-    loadingScreen.style.zIndex = '9999';
+    loadingScreen.style.zIndex = '99999';
     loadingScreen.style.pointerEvents = 'auto';
+    loadingScreen.style.background = '#F5F5F5';
+    loadingScreen.style.backgroundColor = '#F5F5F5';
+    loadingScreen.style.backgroundImage = 'none';
     
     // Start realistic loading animation immediately
     setTimeout(() => {
@@ -118,8 +121,11 @@ function startRealisticLoading() {
         loadingScreen.style.display = 'flex';
         loadingScreen.style.opacity = '1';
         loadingScreen.style.visibility = 'visible';
-        loadingScreen.style.zIndex = '9999';
+        loadingScreen.style.zIndex = '99999';
         loadingScreen.style.pointerEvents = 'auto';
+        loadingScreen.style.background = '#F5F5F5';
+        loadingScreen.style.backgroundColor = '#F5F5F5';
+        loadingScreen.style.backgroundImage = 'none';
     }
     
     // Ensure progress elements exist and reset them
