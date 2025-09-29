@@ -1208,3 +1208,158 @@ saveToCalendar = function() {
     originalSaveToCalendar();
     trackCalendarSave();
 };
+
+// Enhanced Scroll Animations
+function initializeScrollAnimations() {
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all elements with animation classes
+    const animatedElements = document.querySelectorAll('.fade-in-up, .fade-in-left, .fade-in-right, .fade-in-scale, .fade-in-rotate');
+    animatedElements.forEach(el => {
+        observer.observe(el);
+    });
+}
+
+// Scroll Indicator
+function initializeScrollIndicator() {
+    const scrollIndicator = document.getElementById('scrollIndicator');
+    const scrollDots = document.querySelectorAll('.scroll-dot');
+    const sections = document.querySelectorAll('[id$="-section"], .header, .invitation-card');
+
+    // Show scroll indicator after scrolling
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 100) {
+            scrollIndicator.classList.add('show');
+        } else {
+            scrollIndicator.classList.remove('show');
+        }
+
+        // Update active dot
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (window.scrollY >= (sectionTop - 200)) {
+                current = section.getAttribute('id') || section.className;
+            }
+        });
+
+        scrollDots.forEach(dot => {
+            dot.classList.remove('active');
+            const target = dot.getAttribute('data-target');
+            if (target && document.getElementById(target) && current.includes(target.replace('-section', ''))) {
+                dot.classList.add('active');
+            }
+        });
+    });
+
+    // Click to scroll to section
+    scrollDots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const target = dot.getAttribute('data-target');
+            const targetElement = document.getElementById(target);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
+// Scroll Progress Bar
+function initializeScrollProgress() {
+    const progressBar = document.querySelector('.scroll-progress');
+    
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.body.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        
+        progressBar.style.width = scrollPercent + '%';
+    });
+}
+
+// Enhanced Loading Animation
+function createFloatingElements() {
+    const loadingFloating = document.querySelector('.loading-floating');
+    if (!loadingFloating) return;
+
+    // Create additional floating elements
+    for (let i = 0; i < 5; i++) {
+        const element = document.createElement('div');
+        element.className = 'floating-element';
+        element.style.left = Math.random() * 100 + '%';
+        element.style.animationDelay = Math.random() * 2 + 's';
+        element.style.animationDuration = (Math.random() * 2 + 3) + 's';
+        loadingFloating.appendChild(element);
+    }
+}
+
+// Smooth scroll to top
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+// Add scroll to top button
+function addScrollToTopButton() {
+    const scrollToTopBtn = document.createElement('button');
+    scrollToTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    scrollToTopBtn.className = 'scroll-to-top';
+    scrollToTopBtn.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FFB6C1, #F8BBD9);
+        border: none;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+    `;
+    
+    scrollToTopBtn.addEventListener('click', scrollToTop);
+    document.body.appendChild(scrollToTopBtn);
+
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            scrollToTopBtn.style.opacity = '1';
+            scrollToTopBtn.style.visibility = 'visible';
+        } else {
+            scrollToTopBtn.style.opacity = '0';
+            scrollToTopBtn.style.visibility = 'hidden';
+        }
+    });
+}
+
+// Initialize enhanced features
+setTimeout(() => {
+    initializeScrollAnimations();
+    initializeScrollIndicator();
+    initializeScrollProgress();
+    createFloatingElements();
+    addScrollToTopButton();
+}, 1000);

@@ -5,6 +5,86 @@
     box-sizing: border-box;
 }
 
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Scroll Progress Bar */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: linear-gradient(90deg, #FFB6C1, #F8BBD9, #FFC0CB);
+    z-index: 10000;
+    transition: width 0.1s ease;
+    box-shadow: 0 2px 10px rgba(255, 182, 193, 0.3);
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.scroll-indicator.show {
+    opacity: 1;
+}
+
+.scroll-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 182, 193, 0.3);
+    border: 2px solid rgba(255, 182, 193, 0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.scroll-dot.active {
+    background: #FFB6C1;
+    border-color: #F8BBD9;
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(255, 182, 193, 0.5);
+}
+
+.scroll-dot:hover {
+    transform: scale(1.3);
+    background: #F8BBD9;
+}
+
+.scroll-dot::after {
+    content: attr(data-section);
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.scroll-dot:hover::after {
+    opacity: 1;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
@@ -239,21 +319,51 @@ body::before {
     align-items: center;
     z-index: 9999;
     transition: opacity 0.5s ease-out;
+    overflow: hidden;
+}
+
+#loading-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 192, 203, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(248, 187, 217, 0.15) 0%, transparent 50%);
+    animation: loadingBg 3s ease-in-out infinite;
+}
+
+@keyframes loadingBg {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.1) rotate(180deg);
+        opacity: 1;
+    }
 }
 
 .loading-content {
     text-align: center;
     color: #5D4E37;
+    position: relative;
+    z-index: 2;
 }
 
 .loading-hearts {
     margin-bottom: 20px;
+    position: relative;
 }
 
 .loading-hearts i {
     font-size: 2rem;
     margin: 0 10px;
     animation: heartbeat 1.5s ease-in-out infinite;
+    position: relative;
 }
 
 .loading-hearts i:nth-child(2) {
@@ -262,6 +372,171 @@ body::before {
 
 .loading-hearts i:nth-child(3) {
     animation-delay: 0.4s;
+}
+
+/* Advanced Loading Animation */
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 30px;
+    position: relative;
+}
+
+.loading-spinner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 4px solid rgba(255, 182, 193, 0.3);
+    border-top: 4px solid #FFB6C1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-spinner::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(248, 187, 217, 0.3);
+    border-top: 3px solid #F8BBD9;
+    border-radius: 50%;
+    animation: spin 1.5s linear infinite reverse;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Loading Text Animation */
+.loading-text {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    animation: loadingText 2s ease-in-out infinite;
+}
+
+@keyframes loadingText {
+    0%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+/* Loading Dots Animation */
+.loading-dots {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.loading-dots::after {
+    content: '';
+    animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+    0%, 20% {
+        content: '';
+    }
+    40% {
+        content: '.';
+    }
+    60% {
+        content: '..';
+    }
+    80%, 100% {
+        content: '...';
+    }
+}
+
+/* Floating Elements in Loading */
+.loading-floating {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.loading-floating .floating-element {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(45deg, #FFB6C1, #F8BBD9);
+    border-radius: 50%;
+    animation: floatUp 3s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+.loading-floating .floating-element:nth-child(1) {
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.loading-floating .floating-element:nth-child(2) {
+    left: 20%;
+    animation-delay: 0.5s;
+}
+
+.loading-floating .floating-element:nth-child(3) {
+    left: 30%;
+    animation-delay: 1s;
+}
+
+.loading-floating .floating-element:nth-child(4) {
+    left: 40%;
+    animation-delay: 1.5s;
+}
+
+.loading-floating .floating-element:nth-child(5) {
+    left: 50%;
+    animation-delay: 2s;
+}
+
+.loading-floating .floating-element:nth-child(6) {
+    left: 60%;
+    animation-delay: 2.5s;
+}
+
+.loading-floating .floating-element:nth-child(7) {
+    left: 70%;
+    animation-delay: 3s;
+}
+
+.loading-floating .floating-element:nth-child(8) {
+    left: 80%;
+    animation-delay: 3.5s;
+}
+
+.loading-floating .floating-element:nth-child(9) {
+    left: 90%;
+    animation-delay: 4s;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.6;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
 }
 
 @keyframes heartbeat {
@@ -1585,6 +1860,107 @@ body::before {
     }
 }
 
+/* Enhanced Scroll Animations */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+.fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease-out;
+}
+
+.fade-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.8s ease-out;
+}
+
+.fade-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-in-scale {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.8s ease-out;
+}
+
+.fade-in-scale.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.fade-in-rotate {
+    opacity: 0;
+    transform: rotate(-10deg) scale(0.9);
+    transition: all 0.8s ease-out;
+}
+
+.fade-in-rotate.visible {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+/* Staggered Animation Delays */
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+.stagger-4 { transition-delay: 0.4s; }
+.stagger-5 { transition-delay: 0.5s; }
+.stagger-6 { transition-delay: 0.6s; }
+.stagger-7 { transition-delay: 0.7s; }
+.stagger-8 { transition-delay: 0.8s; }
+
+/* Smooth Scroll Behavior */
+.smooth-scroll {
+    scroll-behavior: smooth;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFB6C1, #F8BBD9);
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+}
+
+.scroll-to-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 182, 193, 0.4);
+    background: linear-gradient(135deg, #F8BBD9, #FFC0CB);
+}
+
+.scroll-to-top:active {
+    transform: translateY(-1px);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -1675,6 +2051,32 @@ body::before {
     
     .analytics-charts {
         grid-template-columns: 1fr;
+    }
+    
+    /* Scroll Indicator Mobile */
+    .scroll-indicator {
+        right: 15px;
+        gap: 8px;
+    }
+    
+    .scroll-dot {
+        width: 10px;
+        height: 10px;
+    }
+    
+    .scroll-dot::after {
+        font-size: 10px;
+        padding: 3px 6px;
+        right: 20px;
+    }
+    
+    /* Scroll to Top Button Mobile */
+    .scroll-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 16px;
     }
 }
 

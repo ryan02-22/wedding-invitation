@@ -30,20 +30,44 @@
 
     <!-- Loading Screen -->
     <div id="loading-screen">
+        <div class="loading-floating">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
         <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Memuat Undangan<span class="loading-dots"></span></div>
             <div class="loading-hearts">
                 <i class="fas fa-heart"></i>
                 <i class="fas fa-heart"></i>
                 <i class="fas fa-heart"></i>
             </div>
-            <p>Memuat Undangan...</p>
         </div>
+    </div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <div class="scroll-dot active" data-section="Home" data-target="opening-screen"></div>
+        <div class="scroll-dot" data-section="Countdown" data-target="countdown-section"></div>
+        <div class="scroll-dot" data-section="Gallery" data-target="gallery-section"></div>
+        <div class="scroll-dot" data-section="RSVP" data-target="rsvp-section"></div>
+        <div class="scroll-dot" data-section="Wishes" data-target="wishes-section"></div>
     </div>
 
     <!-- Main Container -->
     <div class="container">
         <!-- Header Section -->
-        <header class="header">
+        <header class="header fade-in-up">
             <div class="header-content">
                 <h1 class="couple-names">Fatur & simbetr</h1>
                 <p class="wedding-date">Sabtu, 15 Februari 2025</p>
@@ -120,7 +144,7 @@
                     </div>
                 </div>
 
-                <div class="rsvp-section">
+                <div class="rsvp-section fade-in-up stagger-4">
                     <h3>Konfirmasi Kehadiran</h3>
                     <p>Mohon konfirmasi kehadiran Anda sebelum tanggal 10 Februari 2026</p>
                     
@@ -171,7 +195,7 @@
         </div>
 
         <!-- Gallery Section -->
-        <div class="gallery-section">
+        <div class="gallery-section fade-in-up stagger-3">
             <h2>Momen Berharga</h2>
             <div class="gallery-container">
                 <!-- Horizontal Row -->
@@ -231,22 +255,22 @@
         </div>
 
         <!-- Countdown Section -->
-        <div class="countdown-section">
+        <div class="countdown-section fade-in-up stagger-1">
             <h2>Menuju Hari Bahagia</h2>
             <div class="countdown-timer">
-                <div class="time-unit">
+                <div class="time-unit fade-in-scale stagger-1">
                     <span id="days">00</span>
                     <label>Hari</label>
                 </div>
-                <div class="time-unit">
+                <div class="time-unit fade-in-scale stagger-2">
                     <span id="hours">00</span>
                     <label>Jam</label>
                 </div>
-                <div class="time-unit">
+                <div class="time-unit fade-in-scale stagger-3">
                     <span id="minutes">00</span>
                     <label>Menit</label>
                 </div>
-                <div class="time-unit">
+                <div class="time-unit fade-in-scale stagger-4">
                     <span id="seconds">00</span>
                     <label>Detik</label>
                 </div>
@@ -254,7 +278,7 @@
         </div>
 
         <!-- Ucapan Selamat Section -->
-        <div class="wishes-section">
+        <div class="wishes-section fade-in-up stagger-2">
             <h2>💝 Ucapan Selamat</h2>
             <p>Bagikan kebahagiaan dan doa terbaik untuk pasangan</p>
             
