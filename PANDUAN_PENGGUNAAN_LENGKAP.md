@@ -38,22 +38,31 @@
   - Format: "Waktu saat ini: 14:30:25 WIB"
 - **Lokasi**: File `script.js` - fungsi `updateCurrentTime()`
 
-### 4. **Gallery Interaktif dengan Layout Dinamis**
-- **Fungsi**: Menampilkan foto-foto dengan susunan yang menarik
+### 4. **Gallery Interaktif dengan Soft Romantic Look**
+- **Fungsi**: Menampilkan foto-foto dengan susunan yang menarik dan efek romantic
 - **Layout**:
   - **Horizontal Row**: Foto lebar + foto biasa
   - **Vertical Row**: Foto-foto tersusun vertikal
   - **Mixed Row**: Kombinasi foto biasa dan lebar
 - **Fitur**:
+  - **Fade-in Slow Animation**: Animasi masuk yang tenang dan rapi (1.2s)
+  - **Staggered Timing**: Delay 0.2s antar item untuk efek berurutan
+  - **Parallax Background**: Background bergerak dengan efek parallax
+  - **Scale Effect**: Efek scale dari 0.95 ke 1.0 untuk smoothness
   - Hover effect dengan overlay dan judul
   - Modal popup saat klik foto
   - Responsive design untuk semua device
   - Animasi fade-in saat scroll
 - **Lokasi**: File `index.html` - section gallery, File `style.css` - class gallery
 
-### 5. **Sistem RSVP Terintegrasi WhatsApp**
-- **Fungsi**: Memungkinkan tamu konfirmasi kehadiran langsung ke WhatsApp
-- **Fitur**:
+### 5. **Sistem RSVP Terintegrasi dengan Soft Romantic Look**
+- **Fungsi**: Memungkinkan tamu konfirmasi kehadiran dengan tampilan romantic
+- **Fitur Visual**:
+  - **Fade-up Animation**: Animasi naik dengan durasi 1 detik
+  - **Shimmer Effect**: Efek shimmer yang bergerak di background
+  - **Rose Gold Theme**: Background gradient dengan warna romantic
+  - **Scale Effect**: Efek scale untuk smoothness
+- **Fitur Utama**:
   - Form input nama lengkap dan jumlah tamu
   - Tombol "Hadir" dan "Tidak Hadir"
   - Validasi input yang ketat
@@ -65,7 +74,93 @@
   - **Tidak Hadir**: Pesan permohonan maaf dengan doa
 - **Lokasi**: File `script.js` - fungsi `confirmAttendance()` dan `sendToWhatsApp()`
 
-### 6. **Fitur Transfer Uang untuk yang Tidak Hadir**
+### 6. **Tema Dinamis (5 Pilihan Tema)**
+- **Fungsi**: Memungkinkan pengunjung memilih tema warna yang disukai
+- **Tema Tersedia**:
+  - **Coklat Cream** (Default) - Tema elegan dan hangat
+  - **Pink Romantic** - Tema romantis dengan nuansa pink
+  - **Blue Elegant** - Tema elegan dengan nuansa biru
+  - **Green Nature** - Tema natural dengan nuansa hijau
+  - **Purple Royal** - Tema royal dengan nuansa ungu
+- **Fitur**:
+  - Preview warna di tombol tema
+  - Perubahan tema instant tanpa reload
+  - Tema tersimpan otomatis di localStorage
+  - Konsistensi warna di seluruh elemen
+- **Cara Penggunaan**:
+  1. Scroll ke bagian bawah halaman "Ucapan Selamat"
+  2. Pilih tema yang diinginkan dari 5 pilihan
+  3. Tema akan langsung diterapkan ke seluruh halaman
+- **Lokasi**: File `index.html` - section theme-selector, File `script.js` - fungsi `changeTheme()`
+
+### 7. **Guest Analytics Dashboard**
+- **Fungsi**: Menampilkan statistik dan analisis pengunjung undangan
+- **Data yang Ditampilkan**:
+  - **Total Pengunjung** - Jumlah pengunjung unik
+  - **Ucapan Selamat** - Jumlah ucapan yang masuk
+  - **Konfirmasi Hadir** - Jumlah konfirmasi RSVP
+  - **Simpan Kalender** - Jumlah yang menyimpan ke kalender
+- **Grafik Analytics**:
+  - **Aktivitas Harian** - Bar chart 7 hari terakhir
+  - **Waktu Kunjungan** - Line chart 24 jam
+- **Cara Mengakses**:
+  1. Klik tombol "Mode Admin" di bagian bawah halaman
+  2. Panel admin akan muncul dengan dashboard analytics
+  3. Data akan terupdate real-time saat ada aktivitas
+- **Lokasi**: File `index.html` - section analytics-dashboard, File `script.js` - fungsi analytics
+
+### 8. **Admin Panel untuk Mengelola Ucapan**
+- **Fungsi**: Memungkinkan admin menghapus ucapan yang tidak pantas
+- **Fitur**:
+  - **Mode Admin** - Toggle untuk mengaktifkan/menonaktifkan mode admin
+  - **Visual Feedback** - Ucapan yang bisa dihapus memiliki styling khusus
+  - **Konfirmasi Hapus** - Dialog konfirmasi sebelum menghapus
+  - **Animasi Hapus** - Efek slide saat menghapus ucapan
+- **Cara Penggunaan**:
+  1. Klik tombol "Mode Admin" di bagian bawah halaman
+  2. Ucapan akan memiliki cursor pointer dan efek hover
+  3. Klik pada ucapan yang ingin dihapus
+  4. Konfirmasi penghapusan di dialog
+- **Lokasi**: File `script.js` - fungsi `toggleAdminMode()`, `handleWishDelete()`
+
+### 9. **Fitur Kalender & Maps Terintegrasi**
+- **Fungsi**: Memudahkan tamu menyimpan tanggal dan menemukan lokasi
+- **Fitur Kalender**:
+  - **Simpan ke Google Calendar** - Langsung buka Google Calendar
+  - **Simpan ke Outlook** - Langsung buka Outlook Calendar
+  - **Download .ics File** - Download file kalender universal
+- **Fitur Maps**:
+  - **Google Maps** - Buka lokasi di Google Maps
+  - **Waze** - Buka navigasi di Waze
+  - **Copy Alamat** - Salin alamat ke clipboard
+- **Cara Penggunaan**:
+  - **Kalender**: Klik tombol "Simpan ke Kalender" di bagian tanggal
+  - **Maps**: Klik tombol navigasi di bagian lokasi
+- **Lokasi**: File `index.html` - tombol kalender dan maps, File `script.js` - fungsi kalender dan maps
+
+### 10. **Soft Romantic Look & Animasi**
+- **Floating Petals**:
+  - Kelopak bunga melayang dengan 3 variasi warna
+  - Durasi animasi 8-12 detik
+  - Warna rose gold dan blush pink
+- **Gentle Glow Effects**:
+  - Efek cahaya lembut pada nama pengantin
+  - Glow pulse setiap 3 detik
+  - Multi-layer text shadow
+- **Parallax & Scroll Reveal**:
+  - Background bergerak di galeri
+  - Animasi muncul saat scroll
+  - Intersection Observer untuk trigger
+- **Fade-in Slow**:
+  - Animasi masuk yang tenang dan rapi
+  - Staggered timing untuk efek berurutan
+  - Scale effect untuk smoothness
+- **Shimmer Effects**:
+  - Efek shimmer di background RSVP
+  - Animasi bergerak yang halus
+- **Lokasi**: File `style.css` - animasi dan efek, File `script.js` - fungsi animasi
+
+### 11. **Fitur Transfer Uang untuk yang Tidak Hadir**
 - **Fungsi**: Menampilkan opsi transfer untuk tamu yang tidak bisa hadir
 - **Fitur**:
   - Tampil otomatis saat pilih "Tidak Hadir"
@@ -98,11 +193,107 @@
 
 ## 🎮 Cara Penggunaan Lengkap
 
-### **A. Untuk Tamu Undangan**
+### **A. Menggunakan Tema Dinamis**
+
+#### **1. Mengganti Tema**
+1. **Scroll ke Bawah**: Scroll ke bagian bawah halaman "Ucapan Selamat"
+2. **Pilih Tema**: Klik pada salah satu dari 5 pilihan tema:
+   - **Coklat Cream** - Tema elegan dan hangat (default)
+   - **Pink Romantic** - Tema romantis dengan nuansa pink
+   - **Blue Elegant** - Tema elegan dengan nuansa biru
+   - **Green Nature** - Tema natural dengan nuansa hijau
+   - **Purple Royal** - Tema royal dengan nuansa ungu
+3. **Tema Terapkan**: Tema akan langsung diterapkan ke seluruh halaman
+4. **Tersimpan Otomatis**: Tema pilihan akan tersimpan dan diingat saat kunjungan berikutnya
+
+#### **2. Preview Tema**
+- Setiap tombol tema memiliki preview warna di atasnya
+- Warna preview menunjukkan gradasi warna yang akan diterapkan
+- Hover pada tombol untuk melihat efek visual
+
+### **B. Menggunakan Guest Analytics (Mode Admin)**
+
+#### **1. Mengakses Analytics**
+1. **Aktifkan Mode Admin**: Klik tombol "Mode Admin" di bagian bawah halaman
+2. **Panel Admin Muncul**: Dashboard analytics akan muncul di panel admin
+3. **Lihat Statistik**: Data akan terupdate real-time saat ada aktivitas
+
+#### **2. Data yang Tersedia**
+- **Total Pengunjung**: Jumlah pengunjung unik yang mengunjungi undangan
+- **Ucapan Selamat**: Jumlah ucapan yang telah dikirim
+- **Konfirmasi Hadir**: Jumlah tamu yang mengkonfirmasi kehadiran
+- **Simpan Kalender**: Jumlah yang menyimpan tanggal ke kalender
+
+#### **3. Grafik Analytics**
+- **Aktivitas Harian**: Bar chart menunjukkan aktivitas 7 hari terakhir
+- **Waktu Kunjungan**: Line chart menunjukkan distribusi kunjungan per jam
+
+### **C. Mengelola Ucapan Selamat (Mode Admin)**
+
+#### **1. Mengaktifkan Mode Admin**
+1. Klik tombol "Mode Admin" di bagian bawah halaman
+2. Tombol akan berubah menjadi "Keluar dari Mode Admin" dengan warna merah
+
+#### **2. Menghapus Ucapan**
+1. **Mode Admin Aktif**: Setelah mode admin aktif, semua ucapan akan memiliki:
+   - Cursor pointer saat di-hover
+   - Efek visual saat di-hover (background merah muda)
+   - Tooltip "🗑️ Klik untuk menghapus" di pojok kanan atas
+2. **Klik Ucapan**: Klik pada ucapan yang ingin dihapus
+3. **Konfirmasi**: Akan muncul dialog "Apakah Anda yakin ingin menghapus ucapan ini?"
+4. **Hapus**: Klik "OK" untuk menghapus atau "Cancel" untuk membatalkan
+5. **Animasi**: Ucapan akan hilang dengan animasi slide
+
+### **D. Menggunakan Fitur Kalender & Maps**
+
+#### **1. Simpan ke Kalender**
+1. **Scroll ke Bagian Tanggal**: Scroll ke bagian detail pernikahan
+2. **Klik Tombol**: Klik tombol "Simpan ke Kalender" di bawah tanggal
+3. **Pilih Platform**: Pilih platform kalender yang diinginkan:
+   - **Google Calendar** - Langsung buka Google Calendar
+   - **Outlook Calendar** - Langsung buka Outlook Calendar
+   - **Download .ics File** - Download file kalender universal
+
+#### **2. Navigasi ke Lokasi**
+1. **Scroll ke Bagian Lokasi**: Scroll ke bagian detail pernikahan
+2. **Pilih Platform**: Klik tombol navigasi yang diinginkan:
+   - **Google Maps** - Buka lokasi di Google Maps
+   - **Waze** - Buka navigasi di Waze
+   - **Copy Alamat** - Salin alamat ke clipboard
+
+### **E. Mengalami Soft Romantic Look**
+
+#### **1. Floating Petals**
+- **Kelopak Bunga Melayang**: Kelopak bunga dengan 3 variasi warna melayang di layar
+- **Warna**: Rose gold, blush pink, dan dusty rose
+- **Durasi**: 8-12 detik per kelopak
+- **Frekuensi**: Kelopak baru muncul setiap 3 detik
+
+#### **2. Gentle Glow Effects**
+- **Nama Pengantin**: Efek cahaya lembut yang berdenyut setiap 3 detik
+- **Multi-layer Shadow**: Bayangan teks dengan efek cahaya multi-layer
+- **Background Glow**: Latar belakang dengan gradien romantic
+
+#### **3. Parallax & Scroll Reveal**
+- **Background Bergerak**: Background di galeri bergerak dengan efek parallax
+- **Animasi Scroll**: Elemen muncul dengan animasi saat di-scroll
+- **Intersection Observer**: Deteksi scroll untuk trigger animasi
+
+#### **4. Fade-in Slow Animation**
+- **Galeri**: Animasi masuk yang tenang dan rapi (1.2 detik)
+- **Staggered Timing**: Delay 0.2 detik antar item untuk efek berurutan
+- **Scale Effect**: Efek scale dari 0.95 ke 1.0 untuk smoothness
+
+#### **5. Shimmer Effects**
+- **RSVP Background**: Efek shimmer yang bergerak di background RSVP
+- **Animasi Halus**: Gerakan yang smooth dan tidak mengganggu
+- **Durasi**: 3 detik per siklus
+
+### **F. Untuk Tamu Undangan**
 
 #### **1. Membuka Undangan**
 1. **Buka link undangan** di browser (Chrome, Firefox, Safari, Edge)
-2. **Tunggu opening screen** muncul dengan animasi amplop
+2. **Tunggu opening screen** muncul dengan animasi amplop dan floating petals
 3. **Klik tombol "Buka Undangan"** untuk masuk ke halaman utama
 4. **Tunggu loading screen** selesai (2 detik)
 5. **Scroll ke bawah** untuk melihat semua informasi

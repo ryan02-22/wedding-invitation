@@ -35,9 +35,11 @@ Undangan pernikahan digital yang modern dan interaktif untuk Ayu & Fatur. Dibang
 ## 🚀 Fitur Utama
 
 ### 1. **Opening Screen (Layar Pembuka)**
-- Animasi amplop yang menarik
+- Animasi amplop yang menarik dengan efek romantic glow
+- Floating petals dengan warna rose gold dan blush pink
 - Transisi smooth ke halaman utama
 - Loading screen dengan animasi hati
+- Gentle glow effect untuk konten pembuka
 
 ### 2. **Countdown Timer Real-time**
 - Menampilkan waktu tersisa hingga hari pernikahan
@@ -50,8 +52,10 @@ Undangan pernikahan digital yang modern dan interaktif untuk Ayu & Fatur. Dibang
 - Update otomatis setiap detik
 - Format waktu Indonesia
 
-### 4. **Gallery Interaktif**
+### 4. **Gallery Interaktif dengan Soft Romantic Look**
 - Layout vertikal dan horizontal yang dinamis
+- Fade-in slow animation dengan staggered timing
+- Parallax background effect
 - Hover effects dengan overlay
 - Modal popup untuk melihat foto detail
 - Responsive grid system
@@ -61,20 +65,59 @@ Undangan pernikahan digital yang modern dan interaktif untuk Ayu & Fatur. Dibang
 - Konfirmasi kehadiran (Hadir/Tidak Hadir)
 - Integrasi langsung ke WhatsApp
 - Penyimpanan data di localStorage
+- Fade-up animation dengan shimmer effect
+- Background romantic dengan rose gold theme
 
 ### 6. **Fitur Transfer Uang**
 - Informasi rekening bank (BCA, Mandiri)
 - Informasi e-wallet (DANA, OVO)
 - Tombol copy nomor rekening
 - Tampil otomatis untuk yang tidak hadir
+- Styling konsisten dengan tema romantic
 
-### 7. **Sistem Ucapan Selamat**
+### 7. **Sistem Ucapan Selamat dengan Admin Panel**
 - Form input nama dan pesan
 - Tampilan real-time ucapan
 - Animasi fade-in untuk ucapan baru
 - Penyimpanan di localStorage
+- **Mode Admin** untuk menghapus ucapan
+- Visual feedback untuk admin mode
 
-### 8. **Informasi Detail Pernikahan**
+### 8. **Tema Dinamis (5 Pilihan)**
+- **Coklat Cream** - Tema elegan dan hangat (default)
+- **Pink Romantic** - Tema romantis dengan nuansa pink
+- **Blue Elegant** - Tema elegan dengan nuansa biru
+- **Green Nature** - Tema natural dengan nuansa hijau
+- **Purple Royal** - Tema royal dengan nuansa ungu
+- Preview warna di tombol tema
+- Perubahan tema instant tanpa reload
+
+### 9. **Guest Analytics Dashboard**
+- **Total Pengunjung** - Tracking pengunjung unik
+- **Ucapan Selamat** - Jumlah ucapan yang masuk
+- **Konfirmasi Hadir** - Jumlah konfirmasi RSVP
+- **Simpan Kalender** - Jumlah yang menyimpan ke kalender
+- **Grafik Aktivitas Harian** - Bar chart 7 hari terakhir
+- **Grafik Waktu Kunjungan** - Line chart 24 jam
+- Data real-time dan persistent storage
+
+### 10. **Fitur Kalender & Maps**
+- **Simpan ke Kalender** - Google Calendar, Outlook, atau download .ics
+- **Google Maps** - Buka lokasi di Google Maps
+- **Waze** - Buka navigasi di Waze
+- **Copy Alamat** - Salin alamat ke clipboard
+- Styling konsisten dengan tema romantic
+
+### 11. **Soft Romantic Look & Animasi**
+- **Floating Petals** - Kelopak bunga melayang dengan 3 variasi warna
+- **Gentle Glow** - Efek cahaya lembut pada nama pengantin
+- **Parallax Effects** - Background bergerak di galeri
+- **Scroll Reveal** - Animasi muncul saat scroll
+- **Fade-in Slow** - Animasi masuk yang tenang dan rapi
+- **Fade-up** - Animasi naik untuk RSVP
+- **Shimmer Effects** - Efek shimmer di background
+
+### 12. **Informasi Detail Pernikahan**
 - Nama pasangan yang dapat dikustomisasi
 - Tanggal dan waktu pernikahan
 - Lokasi lengkap dengan link Google Maps
@@ -324,7 +367,47 @@ body {
 }
 ```
 
-### 3. **Menambahkan Musik Background**
+### 3. **Menggunakan Tema Dinamis**
+
+#### Mengganti Tema
+```javascript
+// Di browser console atau script
+changeTheme('pink');    // Pink Romantic
+changeTheme('blue');    // Blue Elegant
+changeTheme('green');   // Green Nature
+changeTheme('purple');  // Purple Royal
+changeTheme('brown');   // Coklat Cream (default)
+```
+
+#### Menambahkan Tema Baru
+```css
+/* File: style.css */
+.theme-custom {
+    --primary-color: #your-color;
+    --secondary-color: #your-color;
+    --accent-color: #your-color;
+    --background-start: #your-color;
+    --background-end: #your-color;
+    --text-color: #your-color;
+}
+```
+
+### 4. **Menggunakan Guest Analytics**
+
+#### Mengakses Analytics
+1. Klik tombol "Mode Admin" di bagian bawah halaman
+2. Panel admin akan muncul dengan dashboard analytics
+3. Data akan terupdate real-time saat ada aktivitas
+
+#### Data yang Tersimpan
+- Total pengunjung unik
+- Jumlah ucapan selamat
+- Jumlah konfirmasi RSVP
+- Jumlah yang menyimpan ke kalender
+- Aktivitas harian (7 hari terakhir)
+- Aktivitas per jam (24 jam)
+
+### 5. **Menambahkan Musik Background**
 
 #### File: `script.js`
 ```javascript
@@ -646,7 +729,22 @@ vercel
 
 ## 📝 Changelog
 
-### Version 2.0.0 (Current)
+### Version 3.0.0 (Current) - Soft Romantic Look
+- 🌹 **Added Soft Romantic Look** - Kombinasi ideal dengan efek visual romantic
+- 🌸 **Added Floating Petals** - Kelopak bunga melayang dengan 3 variasi warna
+- ✨ **Added Gentle Glow Effects** - Efek cahaya lembut pada nama pengantin
+- 🎭 **Added Parallax & Scroll Reveal** - Background bergerak dan animasi scroll
+- 🎨 **Added Tema Dinamis** - 5 pilihan tema dengan preview warna
+- 📊 **Added Guest Analytics** - Dashboard analytics dengan grafik real-time
+- 🔧 **Added Admin Panel** - Mode admin untuk mengelola ucapan
+- 📅 **Added Kalender Integration** - Simpan ke Google Calendar, Outlook, atau .ics
+- 🗺️ **Added Maps Integration** - Google Maps, Waze, dan copy alamat
+- 💫 **Added Shimmer Effects** - Efek shimmer di background RSVP
+- 🎨 **Updated Color Scheme** - Rose gold dan blush pink theme
+- ⚡ **Improved Performance** - Optimasi animasi dan loading
+- 📱 **Enhanced Mobile Experience** - Responsive design yang lebih baik
+
+### Version 2.0.0
 - ✅ Added opening screen dengan animasi amplop
 - ✅ Added countdown timer real-time
 - ✅ Added jam real-time
