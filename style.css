@@ -527,14 +527,17 @@ body::before {
     text-align: center;
     margin: 50px 0;
     padding: 40px;
-    background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+    background: linear-gradient(135deg, #FFB6C1, #F8BBD9, #FFC0CB);
     border-radius: 20px;
-    color: white;
+    color: #5D4E37;
     opacity: 0;
     transform: translateY(50px);
     animation: fadeUp 1s ease-out 0.5s forwards;
     position: relative;
     overflow: hidden;
+    box-shadow: 
+        0 15px 35px rgba(255, 182, 193, 0.3),
+        0 5px 15px rgba(248, 187, 217, 0.2);
 }
 
 .rsvp-section::before {
@@ -582,12 +585,15 @@ body::before {
     font-size: 2rem;
     margin-bottom: 20px;
     font-weight: 600;
+    color: #5D4E37;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
 }
 
 .rsvp-section p {
     margin-bottom: 30px;
     font-size: 1.1rem;
     opacity: 0.9;
+    color: #5D4E37;
 }
 
 /* Guest Form */
@@ -601,12 +607,24 @@ body::before {
 
 .guest-form input {
     padding: 12px 20px;
-    border: none;
+    border: 2px solid rgba(255, 255, 255, 0.5);
     border-radius: 25px;
     font-size: 1rem;
     min-width: 200px;
     background: rgba(255, 255, 255, 0.9);
-    color: #333;
+    color: #5D4E37;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+    transition: all 0.3s ease;
+}
+
+.guest-form input:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 
+        0 4px 15px rgba(255, 182, 193, 0.3),
+        0 0 0 3px rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
 .guest-form input::placeholder {
@@ -636,14 +654,17 @@ body::before {
 }
 
 .rsvp-btn.confirm {
-    background: #4ecdc4;
+    background: linear-gradient(135deg, #FF6B9D, #FF8FA3);
     color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
 .rsvp-btn.decline {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.3);
+    color: #5D4E37;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
 }
 
 .rsvp-btn:hover {
@@ -655,20 +676,24 @@ body::before {
 .transfer-section {
     margin-top: 30px;
     padding: 30px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 15px;
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(255, 182, 193, 0.2);
 }
 
 .transfer-section h4 {
     font-size: 1.5rem;
     margin-bottom: 15px;
-    color: #fff;
+    color: #5D4E37;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
 }
 
 .transfer-section p {
     margin-bottom: 25px;
     opacity: 0.9;
+    color: #5D4E37;
 }
 
 .transfer-options {
@@ -678,25 +703,29 @@ body::before {
 }
 
 .transfer-option {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.2);
     padding: 20px;
     border-radius: 10px;
     text-align: left;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
 }
 
 .transfer-option h5 {
     font-size: 1.2rem;
     margin-bottom: 15px;
-    color: #fff;
+    color: #5D4E37;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .transfer-option p {
     margin-bottom: 10px;
     font-size: 0.9rem;
+    color: #5D4E37;
 }
 
 .copy-btn {
-    background: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #FF6B9D, #FF8FA3);
     border: 1px solid rgba(255, 255, 255, 0.3);
     color: white;
     padding: 8px 15px;
@@ -705,11 +734,13 @@ body::before {
     cursor: pointer;
     margin: 5px 5px 5px 0;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
 }
 
 .copy-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #FF8FA3, #FF6B9D);
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 157, 0.4);
 }
 
 /* Closing Text */
