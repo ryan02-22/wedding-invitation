@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan - ayu & fatur</title>
+    <title>Undangan Pernikahan - Ayu & Fatur</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <!-- Opening Screen -->
-    <div id="opening-screen">
+    <div id="opening-screen" class="hidden">
         <div class="opening-content">
             <div class="envelope">
                 <div class="envelope-front">
@@ -19,7 +19,7 @@
                 </div>
                 <div class="envelope-back"></div>
             </div>
-            <h1 class="opening-title">ayu & fatur</h1>
+            <h1 class="opening-title">Ayu & Fatur</h1>
             <p class="opening-subtitle">Klik untuk membuka undangan</p>
             <button class="open-invitation-btn" onclick="openInvitation()">
                 <i class="fas fa-envelope-open"></i>
@@ -29,7 +29,7 @@
     </div>
 
     <!-- Loading Screen -->
-    <div id="loading-screen">
+    <div id="loading-screen" class="hidden">
         <div class="loading-content">
             <h1 class="loading-title">Open</h1>
             <h2 class="loading-subtitle">INVITATION</h2>

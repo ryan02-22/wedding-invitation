@@ -54,9 +54,9 @@ function openInvitation() {
     openingScreen.style.transform = 'scale(0.8)';
     
     setTimeout(() => {
-        openingScreen.style.display = 'none';
+        openingScreen.classList.add('hidden');
         // Show loading screen
-        loadingScreen.style.display = 'flex';
+        loadingScreen.classList.remove('hidden');
         
         // Start realistic loading animation
         startRealisticLoading();
@@ -122,7 +122,7 @@ function startRealisticLoading() {
             setTimeout(() => {
                 loadingScreen.style.opacity = '0';
                 setTimeout(() => {
-                    loadingScreen.style.display = 'none';
+                    loadingScreen.classList.add('hidden');
                     // Start all other functions
                     startMainFeatures();
                 }, 500);
@@ -177,18 +177,14 @@ function updateCurrentTime() {
 
 // Loading Screen (fallback)
 window.addEventListener('load', function() {
-    // If opening screen is not shown, show loading screen
-    const openingScreen = document.getElementById('opening-screen');
-    if (openingScreen.style.display !== 'none') {
-        const loadingScreen = document.getElementById('loading-screen');
-        setTimeout(() => {
-            loadingScreen.style.opacity = '0';
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-                startMainFeatures();
-            }, 500);
-        }, 2000);
-    }
+    // Show opening screen after a short delay
+    setTimeout(() => {
+        const openingScreen = document.getElementById('opening-screen');
+        if (openingScreen) {
+            openingScreen.classList.remove('hidden');
+            openingScreen.style.opacity = '1';
+        }
+    }, 500);
 });
 
 // Countdown Timer
@@ -256,7 +252,7 @@ function updateCountdown() {
 }
 
 // Update countdown every second
-setInterval(updateCountdown, 1000);
+const countdownInterval = setInterval(updateCountdown, 1000);
 
 // Floating Hearts Animation
 function createFloatingHeart() {
@@ -275,7 +271,7 @@ function createFloatingHeart() {
 }
 
 // Create floating hearts periodically
-setInterval(createFloatingHeart, 2000);
+const heartsInterval = setInterval(createFloatingHeart, 2000);
 
 // Floating Petals Animation
 function createFloatingPetal() {
@@ -307,7 +303,7 @@ function createFloatingPetal() {
 
 // Create floating petals periodically (less frequent on mobile)
 const petalInterval = isMobile ? 5000 : 3000;
-setInterval(createFloatingPetal, petalInterval);
+const petalsInterval = setInterval(createFloatingPetal, petalInterval);
 
 // RSVP Functionality
 function confirmAttendance(status) {
@@ -1445,24 +1441,14 @@ function initializeAnalyticsAndTheme() {
     loadTheme();
 }
 
-// Update existing functions to track analytics
-const originalSubmitWish = submitWish;
-submitWish = function() {
-    originalSubmitWish();
-    trackWish();
-};
+// Analytics tracking is already integrated in the original functions
 
-const originalConfirmAttendance = confirmAttendance;
-confirmAttendance = function(status) {
-    originalConfirmAttendance(status);
-    trackRSVP();
-};
-
-const originalSaveToCalendar = saveToCalendar;
-saveToCalendar = function() {
-    originalSaveToCalendar();
-    trackCalendarSave();
-};
+// Cleanup function for intervals (if needed)
+function cleanupIntervals() {
+    if (typeof countdownInterval !== 'undefined') clearInterval(countdownInterval);
+    if (typeof heartsInterval !== 'undefined') clearInterval(heartsInterval);
+    if (typeof petalsInterval !== 'undefined') clearInterval(petalsInterval);
+}
 
 // Enhanced Scroll Animations
 function initializeScrollAnimations() {
@@ -1627,7 +1613,7 @@ function initializeBackgroundMusic() {
     document.addEventListener('click', () => {
         if (backgroundAudio.paused) {
             backgroundAudio.play().catch(e => {
-                console.log('Background music autoplay blocked:', e);
+                // Background music autoplay blocked
             });
         }
     }, { once: true });
