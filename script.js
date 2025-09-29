@@ -71,6 +71,9 @@ function openInvitation() {
         behavior: 'instant'
     });
     
+    // Remove body scroll restriction when opening invitation
+    document.body.classList.remove('opening-screen-active');
+    
     // Play opening music
     playOpeningMusic();
     
@@ -176,6 +179,18 @@ function startMainFeatures() {
     createFloatingElements();
     addScrollToTopButton();
     initializeBackgroundMusic();
+    
+    // Show buttons immediately after main content loads
+    setTimeout(() => {
+        if (window.musicButton) {
+            window.musicButton.style.opacity = '1';
+            window.musicButton.style.visibility = 'visible';
+        }
+        if (window.scrollToTopBtn) {
+            window.scrollToTopBtn.style.opacity = '1';
+            window.scrollToTopBtn.style.visibility = 'visible';
+        }
+    }, 500);
 }
 
 // Update current time
@@ -210,6 +225,9 @@ window.addEventListener('load', function() {
         left: 0,
         behavior: 'instant'
     });
+    
+    // Prevent body scroll when opening screen is active
+    document.body.classList.add('opening-screen-active');
     
     // Show opening screen immediately
     const openingScreen = document.getElementById('opening-screen');
@@ -802,6 +820,8 @@ function addMusicPlayer() {
     const musicButton = document.createElement('button');
     musicButton.innerHTML = '🎵';
     musicButton.className = 'music-player-btn';
+    musicButton.setAttribute('aria-label', 'Toggle Music');
+    musicButton.setAttribute('title', 'Play/Pause Music');
     musicButton.style.cssText = `
         position: fixed;
         top: 20px;
@@ -819,12 +839,15 @@ function addMusicPlayer() {
         box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
         opacity: 0;
         visibility: hidden;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
     `;
     
     let isPlaying = false;
     let audio = null;
     
-    musicButton.addEventListener('click', (e) => {
+    // Handle both click and touch events for better mobile compatibility
+    const handleMusicToggle = (e) => {
         e.preventDefault();
         e.stopPropagation();
         
@@ -858,13 +881,16 @@ function addMusicPlayer() {
                 }
             musicButton.innerHTML = '🎵';
             isPlaying = false;
-            }
+        }
         } catch (error) {
             musicButton.innerHTML = '🎵';
             isPlaying = false;
             showToast('Error memutar audio', 'error');
         }
-    });
+    };
+    
+    musicButton.addEventListener('click', handleMusicToggle);
+    musicButton.addEventListener('touchend', handleMusicToggle);
     
     musicButton.addEventListener('mouseenter', () => {
         musicButton.style.transform = 'scale(1.1) translateY(-2px)';
@@ -1565,6 +1591,8 @@ function addScrollToTopButton() {
     const scrollToTopBtn = document.createElement('button');
     scrollToTopBtn.innerHTML = '↑';
     scrollToTopBtn.className = 'scroll-to-top';
+    scrollToTopBtn.setAttribute('aria-label', 'Scroll to Top');
+    scrollToTopBtn.setAttribute('title', 'Scroll to Top');
     scrollToTopBtn.style.cssText = `
         position: fixed;
         top: 20px;
@@ -1583,13 +1611,19 @@ function addScrollToTopButton() {
         transition: all 0.3s ease;
         z-index: 1000;
         box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
     `;
     
-    scrollToTopBtn.addEventListener('click', (e) => {
+    // Handle both click and touch events for better mobile compatibility
+    const handleScrollToTop = (e) => {
         e.preventDefault();
         e.stopPropagation();
         scrollToTop();
-    });
+    };
+    
+    scrollToTopBtn.addEventListener('click', handleScrollToTop);
+    scrollToTopBtn.addEventListener('touchend', handleScrollToTop);
     
     scrollToTopBtn.addEventListener('mouseenter', () => {
         scrollToTopBtn.style.transform = 'scale(1.1) translateY(-2px)';
@@ -1678,26 +1712,16 @@ function initializeUnifiedScrollHandler() {
             }
         }
         
-        // Scroll to Top Button
+        // Scroll to Top Button - Always visible after main content loads
         if (window.scrollToTopBtn) {
-            if (scrollY > 300) {
-                window.scrollToTopBtn.style.opacity = '1';
-                window.scrollToTopBtn.style.visibility = 'visible';
-            } else {
-                window.scrollToTopBtn.style.opacity = '0';
-                window.scrollToTopBtn.style.visibility = 'hidden';
-            }
+            window.scrollToTopBtn.style.opacity = '1';
+            window.scrollToTopBtn.style.visibility = 'visible';
         }
         
-        // Music Button
+        // Music Button - Always visible after main content loads
         if (window.musicButton) {
-            if (scrollY > 100) {
-                window.musicButton.style.opacity = '1';
-                window.musicButton.style.visibility = 'visible';
-            } else {
-                window.musicButton.style.opacity = '0';
-                window.musicButton.style.visibility = 'hidden';
-            }
+            window.musicButton.style.opacity = '1';
+            window.musicButton.style.visibility = 'visible';
         }
     }, 16); // ~60fps
     
