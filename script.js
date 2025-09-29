@@ -1049,67 +1049,14 @@ function saveToCalendar() {
     // Create Outlook Calendar URL
     const outlookUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(eventDetails.title)}&startdt=${startDateStr}&enddt=${endDateStr}&body=${encodeURIComponent(eventDetails.description)}&location=${encodeURIComponent(eventDetails.location)}`;
     
-    // Show calendar options
-    const calendarOptions = document.createElement('div');
-    calendarOptions.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        z-index: 10000;
-        text-align: center;
-        max-width: 400px;
-        width: 90%;
-    `;
-    
-    calendarOptions.innerHTML = `
-        <h3 style="color: #5D4E37; margin-bottom: 20px;">Pilih Kalender</h3>
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            <button onclick="window.open('${googleCalendarUrl}', '_blank'); this.parentElement.parentElement.remove();" 
-                    style="background: #4285f4; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 500;">
-                <i class="fab fa-google"></i> Google Calendar
-            </button>
-            <button onclick="window.open('${outlookUrl}', '_blank'); this.parentElement.parentElement.remove();" 
-                    style="background: #0078d4; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 500;">
-                <i class="fab fa-microsoft"></i> Outlook Calendar
-            </button>
-            <button onclick="downloadICS(); this.parentElement.parentElement.remove();" 
-                    style="background: #8B4513; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 500;">
-                <i class="fas fa-download"></i> Download .ics File
-            </button>
-            <button onclick="this.parentElement.parentElement.remove();" 
-                    style="background: #ccc; color: #333; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 500;">
-                Batal
-            </button>
-        </div>
-    `;
-    
-    // Add backdrop
-    const backdrop = document.createElement('div');
-    backdrop.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-    `;
-    
-    backdrop.addEventListener('click', () => {
-        backdrop.remove();
-        calendarOptions.remove();
-    });
-    
-    document.body.appendChild(backdrop);
-    document.body.appendChild(calendarOptions);
-    
-    showToast('📅 Pilih kalender untuk menyimpan acara', 'info');
-    trackCalendarSave(); // Track analytics
+    // Open Google Calendar directly (no popup selection)
+    try {
+        window.open(googleCalendarUrl, '_blank');
+        showToast('📅 Event berhasil ditambahkan ke Google Calendar!', 'success');
+        trackCalendarSave(); // Track analytics
+    } catch (error) {
+        showToast('❌ Error membuka Google Calendar', 'error');
+    }
 }
 
 // Download ICS file
