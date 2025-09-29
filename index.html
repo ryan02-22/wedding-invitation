@@ -77,6 +77,9 @@
                         <div>
                             <h3>Tanggal</h3>
                             <p>Sabtu, 15 Februari 2025</p>
+                            <button class="save-calendar-btn" onclick="saveToCalendar()">
+                                <i class="fas fa-plus"></i> Simpan ke Kalender
+                            </button>
                         </div>
                     </div>
                     <div class="detail-item">
@@ -93,7 +96,17 @@
                             <h3>Lokasi</h3>
                             <p><strong>Masjid Agung Slawi</strong><br>
                             Jl. Procot Slawi, Tegal<br>
-                            <small>📍 <a href="https://maps.google.com/?q=-6.9788,109.1403" target="_blank">Lihat di Google Maps</a></small></p>
+                            <div class="map-buttons">
+                                <button class="map-btn" onclick="openGoogleMaps()">
+                                    <i class="fas fa-map"></i> Google Maps
+                                </button>
+                                <button class="map-btn" onclick="openWaze()">
+                                    <i class="fas fa-car"></i> Waze
+                                </button>
+                                <button class="map-btn" onclick="copyAddress()">
+                                    <i class="fas fa-copy"></i> Copy Alamat
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="detail-item">

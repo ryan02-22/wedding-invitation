@@ -636,6 +636,150 @@ function addMusicPlayer() {
 // Initialize music player
 addMusicPlayer();
 
+// Save to Calendar Function
+function saveToCalendar() {
+    const weddingDate = new Date('2025-02-15T08:00:00+07:00');
+    const endDate = new Date('2025-02-15T12:00:00+07:00');
+    
+    // Format dates for calendar
+    const startDateStr = weddingDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const endDateStr = endDate.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    
+    const eventDetails = {
+        title: 'Pernikahan Fatur & Simbet',
+        description: 'Undangan pernikahan Fatur & Simbet\n\nLokasi: Masjid Agung Slawi, Jl. Procot Slawi, Tegal\nWaktu: 08.00 - 12.00 WIB\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.',
+        location: 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal',
+        startTime: startDateStr,
+        endTime: endDateStr
+    };
+    
+    // Create Google Calendar URL
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventDetails.title)}&dates=${startDateStr}/${endDateStr}&details=${encodeURIComponent(eventDetails.description)}&location=${encodeURIComponent(eventDetails.location)}`;
+    
+    // Create Outlook Calendar URL
+    const outlookUrl = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(eventDetails.title)}&startdt=${startDateStr}&enddt=${endDateStr}&body=${encodeURIComponent(eventDetails.description)}&location=${encodeURIComponent(eventDetails.location)}`;
+    
+    // Show calendar options
+    const calendarOptions = document.createElement('div');
+    calendarOptions.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        z-index: 10000;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+    `;
+    
+    calendarOptions.innerHTML = `
+        <h3 style="color: #5D4E37; margin-bottom: 20px;">Pilih Kalender</h3>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button onclick="window.open('${googleCalendarUrl}', '_blank'); this.parentElement.parentElement.remove();" 
+                    style="background: #4285f4; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                <i class="fab fa-google"></i> Google Calendar
+            </button>
+            <button onclick="window.open('${outlookUrl}', '_blank'); this.parentElement.parentElement.remove();" 
+                    style="background: #0078d4; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                <i class="fab fa-microsoft"></i> Outlook Calendar
+            </button>
+            <button onclick="downloadICS(); this.parentElement.parentElement.remove();" 
+                    style="background: #8B4513; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                <i class="fas fa-download"></i> Download .ics File
+            </button>
+            <button onclick="this.parentElement.parentElement.remove();" 
+                    style="background: #ccc; color: #333; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 500;">
+                Batal
+            </button>
+        </div>
+    `;
+    
+    // Add backdrop
+    const backdrop = document.createElement('div');
+    backdrop.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    `;
+    
+    backdrop.addEventListener('click', () => {
+        backdrop.remove();
+        calendarOptions.remove();
+    });
+    
+    document.body.appendChild(backdrop);
+    document.body.appendChild(calendarOptions);
+    
+    showToast('📅 Pilih kalender untuk menyimpan acara', 'info');
+}
+
+// Download ICS file
+function downloadICS() {
+    const weddingDate = new Date('2025-02-15T08:00:00+07:00');
+    const endDate = new Date('2025-02-15T12:00:00+07:00');
+    
+    const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wedding Invitation//EN
+BEGIN:VEVENT
+UID:wedding-${Date.now()}@example.com
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTSTART:${weddingDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+DTEND:${endDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+SUMMARY:Pernikahan Fatur & Simbet
+DESCRIPTION:Undangan pernikahan Fatur & Simbet\\n\\nLokasi: Masjid Agung Slawi, Jl. Procot Slawi, Tegal\\nWaktu: 08.00 - 12.00 WIB\\n\\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+LOCATION:Masjid Agung Slawi, Jl. Procot Slawi, Tegal
+END:VEVENT
+END:VCALENDAR`;
+    
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Pernikahan_Fatur_Simbet.ics';
+    link.click();
+    
+    showToast('📥 File kalender berhasil diunduh!', 'success');
+}
+
+// Maps Functions
+function openGoogleMaps() {
+    const address = 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal';
+    const url = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+    window.open(url, '_blank');
+    showToast('🗺️ Membuka Google Maps...', 'info');
+}
+
+function openWaze() {
+    const address = 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal';
+    const url = `https://waze.com/ul?q=${encodeURIComponent(address)}`;
+    window.open(url, '_blank');
+    showToast('🚗 Membuka Waze...', 'info');
+}
+
+function copyAddress() {
+    const address = 'Masjid Agung Slawi, Jl. Procot Slawi, Tegal';
+    navigator.clipboard.writeText(address).then(() => {
+        showToast('📋 Alamat berhasil disalin!', 'success');
+    }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = address;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToast('📋 Alamat berhasil disalin!', 'success');
+    });
+}
+
 // Add confetti effect on page load
 function createConfetti() {
     const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57'];
