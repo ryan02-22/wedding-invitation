@@ -83,11 +83,10 @@ function openInvitation() {
     loadingScreen.style.opacity = '1';
     loadingScreen.style.visibility = 'visible';
     loadingScreen.style.zIndex = '9999';
+    loadingScreen.style.pointerEvents = 'auto';
     
     // Start realistic loading animation immediately
-    setTimeout(() => {
-        startRealisticLoading();
-    }, 100);
+    startRealisticLoading();
     
     // Hide opening screen with animation
     openingScreen.style.opacity = '0';
@@ -118,9 +117,10 @@ function startRealisticLoading() {
         loadingScreen.style.opacity = '1';
         loadingScreen.style.visibility = 'visible';
         loadingScreen.style.zIndex = '9999';
+        loadingScreen.style.pointerEvents = 'auto';
     }
     
-    // Ensure progress elements exist
+    // Ensure progress elements exist and reset them
     if (progressFill) {
         progressFill.style.width = '0%';
     }
@@ -128,49 +128,58 @@ function startRealisticLoading() {
         percentageText.textContent = '0%';
     }
     
-    let progress = 0;
-    const totalDuration = 3000; // 3 seconds total for better visibility
-    const updateInterval = 50; // Update every 50ms (smoother)
-    
-    // Simple and fast loading progression
-    const progressIncrement = 100 / (totalDuration / updateInterval);
-    
-    const loadingInterval = setInterval(() => {
-        progress += progressIncrement;
-        
-        // Add slight randomness for realism but keep it smooth
-        const randomFactor = 0.98 + Math.random() * 0.04; // 0.98 to 1.02
-        const actualProgress = Math.min(progress * randomFactor, 100);
-        
-        // Update UI
-        if (progressFill) {
-            progressFill.style.width = actualProgress + '%';
-        }
-        if (percentageText) {
-            percentageText.textContent = Math.round(actualProgress) + '%';
-        }
-        
-        // Check if loading is complete
-        if (actualProgress >= 100) {
-            clearInterval(loadingInterval);
-            
-            // Hide loading screen and show main content
+    // Force show loading screen with a small delay to ensure visibility
         setTimeout(() => {
-                if (loadingScreen) {
+        if (loadingScreen) {
+            loadingScreen.style.display = 'flex';
+            loadingScreen.style.opacity = '1';
+            loadingScreen.style.visibility = 'visible';
+        }
+        
+        let progress = 0;
+        const totalDuration = 3000; // 3 seconds total for better visibility
+        const updateInterval = 50; // Update every 50ms (smoother)
+        
+        // Simple and fast loading progression
+        const progressIncrement = 100 / (totalDuration / updateInterval);
+        
+        const loadingInterval = setInterval(() => {
+            progress += progressIncrement;
+            
+            // Add slight randomness for realism but keep it smooth
+            const randomFactor = 0.98 + Math.random() * 0.04; // 0.98 to 1.02
+            const actualProgress = Math.min(progress * randomFactor, 100);
+            
+            // Update UI
+            if (progressFill) {
+                progressFill.style.width = actualProgress + '%';
+            }
+            if (percentageText) {
+                percentageText.textContent = Math.round(actualProgress) + '%';
+            }
+            
+            // Check if loading is complete
+            if (actualProgress >= 100) {
+                clearInterval(loadingInterval);
+                
+                // Hide loading screen and show main content
+                setTimeout(() => {
+                    if (loadingScreen) {
             loadingScreen.style.opacity = '0';
             setTimeout(() => {
-                        loadingScreen.classList.add('hidden');
+                            loadingScreen.classList.add('hidden');
                 loadingScreen.style.display = 'none';
-                        loadingScreen.style.visibility = 'hidden';
+                            loadingScreen.style.visibility = 'hidden';
                 // Start all other functions
                 startMainFeatures();
-                        // Reset loading flag
-                        isLoading = false;
-                    }, 300); // Slower transition for better visibility
-                }
-            }, 200); // Delay before hiding
-        }
-    }, updateInterval);
+                            // Reset loading flag
+                            isLoading = false;
+                        }, 300); // Slower transition for better visibility
+                    }
+                }, 200); // Delay before hiding
+            }
+        }, updateInterval);
+    }, 50); // Small delay to ensure loading screen is visible
 }
 
 // Start main features after opening screen
@@ -891,6 +900,7 @@ function addMusicPlayer() {
                 audio.play().then(() => {
             musicButton.innerHTML = '🔇';
             isPlaying = true;
+                    showToast('🎵 Musik dimulai', 'success');
                 }).catch(e => {
                     // Audio autoplay blocked
                     musicButton.innerHTML = '🎵';
@@ -903,7 +913,8 @@ function addMusicPlayer() {
                 }
             musicButton.innerHTML = '🎵';
             isPlaying = false;
-        }
+                showToast('🔇 Musik dihentikan', 'info');
+            }
         } catch (error) {
             musicButton.innerHTML = '🎵';
             isPlaying = false;
