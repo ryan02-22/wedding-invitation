@@ -312,6 +312,11 @@ body::before {
     position: relative;
     letter-spacing: 3px;
     filter: drop-shadow(0 0 20px rgba(255, 182, 193, 0.8));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-smooth: always;
+    -webkit-text-stroke: 0.8px transparent;
 }
 
 .opening-title::before {
@@ -409,7 +414,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 50%, #DEE2E6 100%);
+    background: #F5F5F5;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -421,37 +426,19 @@ body::before {
     -webkit-overflow-scrolling: touch;
     opacity: 1;
     visibility: visible;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-smooth: always;
 }
 
 #loading-screen.hidden {
     display: none;
 }
 
-/* Subtle background pattern */
-#loading-screen::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(52, 152, 219, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(44, 62, 80, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(127, 140, 141, 0.03) 0%, transparent 50%);
-    animation: loadingBgPulse 4s ease-in-out infinite;
-}
+/* Clean minimal background - no patterns */
 
-@keyframes loadingBgPulse {
-    0%, 100% {
-        opacity: 0.5;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.8;
-        transform: scale(1.05);
-    }
-}
+/* Removed unused background pulse animation */
 
 
 .loading-content {
@@ -465,6 +452,10 @@ body::before {
     transform: translateY(20px);
     animation: loadingContentFadeIn 0.8s ease-out 0.3s forwards;
     pointer-events: auto; /* Allow clicks on loading content */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-smooth: always;
 }
 
 @keyframes loadingContentFadeIn {
@@ -477,18 +468,21 @@ body::before {
 /* Loading Title - "Open" */
 .loading-title {
     font-family: 'Dancing Script', cursive;
-    font-size: 4.5rem;
+    font-size: 6rem;
     font-weight: 700;
     margin: 0;
-    background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 30%, #6b7280 70%, #9ca3af 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #1e3a8a;
     line-height: 1;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     opacity: 0;
     animation: titleFadeIn 1s ease-out 0.5s forwards;
-    text-shadow: 0 0 20px rgba(30, 58, 138, 0.3);
+    text-shadow: 0 2px 4px rgba(30, 58, 138, 0.2);
+    letter-spacing: 2px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-smooth: always;
+    -webkit-text-stroke: 0.5px transparent;
 }
 
 @keyframes titleFadeIn {
@@ -505,18 +499,20 @@ body::before {
 /* Loading Subtitle - "INVITATION" */
 .loading-subtitle {
     font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 400;
-    letter-spacing: 8px;
+    letter-spacing: 6px;
     margin: 0;
-    background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 30%, #6b7280 70%, #9ca3af 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 20px;
+    color: #1e3a8a;
+    margin-bottom: 30px;
     opacity: 0;
     animation: subtitleFadeIn 0.8s ease-out 0.8s forwards;
-    text-shadow: 0 0 15px rgba(30, 58, 138, 0.2);
+    text-shadow: 0 1px 3px rgba(30, 58, 138, 0.2);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-smooth: always;
+    -webkit-text-stroke: 0.3px transparent;
 }
 
 @keyframes subtitleFadeIn {
@@ -533,18 +529,20 @@ body::before {
 /* Loading Text - "PLEASE WAIT" */
 .loading-wait-text {
     font-family: 'Playfair Display', serif;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 400;
-    letter-spacing: 4px;
-    background: linear-gradient(90deg, #374151 0%, #6b7280 50%, #9ca3af 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    letter-spacing: 3px;
+    color: #374151;
     margin: 0 0 40px 0;
     text-transform: uppercase;
     opacity: 0;
     animation: waitTextFadeIn 0.6s ease-out 1.1s forwards;
-    text-shadow: 0 0 10px rgba(55, 65, 81, 0.2);
+    text-shadow: 0 1px 2px rgba(55, 65, 81, 0.2);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-smooth: always;
+    -webkit-text-stroke: 0.2px transparent;
 }
 
 @keyframes waitTextFadeIn {
@@ -580,9 +578,9 @@ body::before {
 /* Progress Bar */
 .loading-progress-bar {
     width: 100%;
-    height: 6px;
-    background: #f3f4f6;
-    border-radius: 3px;
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 4px;
     overflow: hidden;
     position: relative;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -590,39 +588,32 @@ body::before {
 
 .loading-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
-    border-radius: 3px;
+    background: #1e3a8a;
+    border-radius: 4px;
     width: 0%;
     transition: width 0.3s ease;
     position: relative;
-    box-shadow: 0 0 10px rgba(30, 58, 138, 0.3);
+    box-shadow: 0 0 8px rgba(30, 58, 138, 0.2);
 }
 
-.loading-progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
-    animation: progressShimmer 2s infinite;
-}
+/* Clean progress bar - no shimmer effect */
 
-@keyframes progressShimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
+/* Removed unused shimmer animation */
 
 /* Progress Percentage */
 .loading-percentage {
     font-family: 'Playfair Display', serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
-    color: #6b7280;
-    margin: 8px 0 0 0;
+    color: #9CA3AF;
+    margin: 10px 0 0 0;
     text-align: center;
-    text-shadow: 0 0 5px rgba(107, 114, 128, 0.3);
+    text-shadow: 0 1px 2px rgba(156, 163, 175, 0.3);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-smooth: always;
+    -webkit-text-stroke: 0.2px transparent;
 }
 
 .loading-hearts {
@@ -856,6 +847,11 @@ body::before {
     position: relative;
     letter-spacing: 3px;
     filter: drop-shadow(0 0 20px rgba(255, 182, 193, 0.8));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-smooth: always;
+    -webkit-text-stroke: 0.8px transparent;
 }
 
 .couple-names::before {
@@ -2322,10 +2318,12 @@ body::before {
     
     .couple-names {
         font-size: 3rem;
+        -webkit-text-stroke: 0.5px transparent;
     }
     
     .opening-title {
         font-size: 3.5rem;
+        -webkit-text-stroke: 0.5px transparent;
     }
     
     .opening-title::before,
@@ -2478,11 +2476,17 @@ body::before {
     }
     
     .loading-title {
-        font-size: 2rem;
+        font-size: 3.5rem;
     }
     
     .loading-subtitle {
+        font-size: 1.2rem;
+        letter-spacing: 3px;
+    }
+    
+    .loading-wait-text {
         font-size: 1rem;
+        letter-spacing: 2px;
     }
     
     /* Touch-friendly buttons */
@@ -2526,7 +2530,17 @@ body::before {
     
     /* Loading Screen Mobile */
     .loading-title {
-        font-size: 3rem;
+        font-size: 4.5rem;
+    }
+    
+    .loading-subtitle {
+        font-size: 1.5rem;
+        letter-spacing: 4px;
+    }
+    
+    .loading-wait-text {
+        font-size: 1.1rem;
+        letter-spacing: 2.5px;
     }
 }
 
@@ -2608,6 +2622,7 @@ body::before {
 @media (max-width: 480px) {
     .couple-names {
         font-size: 2rem;
+        -webkit-text-stroke: 0.3px transparent;
     }
     
     .bride h2, .groom h2 {
