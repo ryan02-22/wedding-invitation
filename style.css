@@ -5,6 +5,24 @@
     box-sizing: border-box;
 }
 
+/* Fix scroll bug on mobile devices */
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Allow text selection for input fields */
+input, textarea, [contenteditable] {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
 /* Performance Optimizations */
 * {
     -webkit-font-smoothing: antialiased;
@@ -24,6 +42,9 @@
 html {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    /* Fix scroll bug on mobile */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
 }
 
 /* Scroll Progress Bar */
@@ -108,7 +129,14 @@ body {
     background: linear-gradient(135deg, #F5E6D3 0%, #F0E6D2 25%, #E6D7C3 50%, #D4C4B0 75%, #C4B5A0 100%);
     min-height: 100vh;
     overflow-x: hidden;
+    overflow-y: auto; /* Ensure vertical scroll works */
     position: relative;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    /* Fix scroll bug on mobile */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 body::before {
@@ -137,7 +165,7 @@ body::before {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000;
+    z-index: 9998; /* Lower than loading screen */
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
@@ -341,6 +369,7 @@ body::before {
     transition: opacity 0.5s ease-out;
     overflow: hidden;
     font-family: 'Poppins', sans-serif;
+    pointer-events: none; /* Allow clicks to pass through */
 }
 
 #loading-screen.hidden {
@@ -384,6 +413,7 @@ body::before {
     opacity: 0;
     transform: translateY(20px);
     animation: loadingContentFadeIn 0.8s ease-out 0.3s forwards;
+    pointer-events: auto; /* Allow clicks on loading content */
 }
 
 @keyframes loadingContentFadeIn {

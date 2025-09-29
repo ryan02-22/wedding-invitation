@@ -32,12 +32,13 @@ function debounce(func, wait) {
 // Play opening music
 function playOpeningMusic() {
     const openingAudio = new Audio('musik.mp3');
-    openingAudio.volume = 0.4;
+    openingAudio.volume = 0.6; // Increased volume for better clarity
     openingAudio.loop = false;
+    openingAudio.preload = 'auto'; // Preload for better performance
     
     // Try to play, but don't force it
     openingAudio.play().catch(e => {
-        // Opening music autoplay blocked
+        // Opening music autoplay blocked - this is normal on mobile
     });
 }
 
@@ -46,12 +47,18 @@ function openInvitation() {
     const openingScreen = document.getElementById('opening-screen');
     const loadingScreen = document.getElementById('loading-screen');
     
+    if (!openingScreen || !loadingScreen) {
+        return;
+    }
+    
     // Play opening music
     playOpeningMusic();
     
     // Show loading screen immediately
     loadingScreen.classList.remove('hidden');
     loadingScreen.style.opacity = '1';
+    loadingScreen.style.display = 'flex';
+    loadingScreen.style.visibility = 'visible';
     
     // Start realistic loading animation immediately
     startRealisticLoading();
@@ -62,6 +69,7 @@ function openInvitation() {
     
     setTimeout(() => {
         openingScreen.classList.add('hidden');
+        openingScreen.style.display = 'none'; // Force hide
     }, 800);
 }
 
@@ -111,6 +119,8 @@ function startRealisticLoading() {
             loadingScreen.style.opacity = '0';
             setTimeout(() => {
                     loadingScreen.classList.add('hidden');
+                    loadingScreen.style.display = 'none'; // Force hide
+                    loadingScreen.style.visibility = 'hidden'; // Force hide
                 // Start all other functions
                 startMainFeatures();
                     // Reset loading flag
@@ -759,7 +769,7 @@ function addMusicPlayer() {
     musicButton.innerHTML = '🎵';
     musicButton.style.cssText = `
         position: fixed;
-        bottom: 20px;
+        bottom: 90px;
         right: 20px;
         width: 60px;
         height: 60px;
@@ -782,10 +792,9 @@ function addMusicPlayer() {
             // Use global background audio if available
             if (window.backgroundAudio) {
                 audio = window.backgroundAudio;
-                audio.volume = 0.3; // Volume 30% agar tidak mengganggu
+                audio.volume = 0.5; // Increased volume for better clarity
                 audio.play().catch(e => {
                     // Audio autoplay blocked
-                    // Fallback jika autoplay diblokir browser
                     musicButton.innerHTML = '🎵';
                     isPlaying = false;
                 });
@@ -793,7 +802,8 @@ function addMusicPlayer() {
                 // Fallback: create new audio
                 audio = new Audio('musik.mp3');
                 audio.loop = true;
-                audio.volume = 0.3;
+                audio.volume = 0.5; // Increased volume for better clarity
+                audio.preload = 'auto';
                 audio.play().catch(e => {
                     // Audio autoplay blocked
                     musicButton.innerHTML = '🎵';
@@ -822,8 +832,7 @@ function addMusicPlayer() {
     document.body.appendChild(musicButton);
 }
 
-// Initialize music player
-addMusicPlayer();
+// Music player is initialized in startMainFeatures()
 
 // Admin Mode Variables
 let isAdminMode = false;
@@ -1416,6 +1425,10 @@ function cleanupIntervals() {
     if (typeof petalsInterval !== 'undefined') clearInterval(petalsInterval);
 }
 
+// Cleanup intervals on page unload
+window.addEventListener('beforeunload', cleanupIntervals);
+window.addEventListener('unload', cleanupIntervals);
+
 // Enhanced Scroll Animations
 function initializeScrollAnimations() {
     const observerOptions = {
@@ -1444,32 +1457,10 @@ function initializeScrollIndicator() {
     const scrollDots = document.querySelectorAll('.scroll-dot');
     const sections = document.querySelectorAll('[id$="-section"], .header, .invitation-card');
 
-    // Show scroll indicator after scrolling
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-            scrollIndicator.classList.add('show');
-        } else {
-            scrollIndicator.classList.remove('show');
-        }
-
-        // Update active dot
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (window.scrollY >= (sectionTop - 200)) {
-                current = section.getAttribute('id') || section.className;
-            }
-        });
-
-        scrollDots.forEach(dot => {
-            dot.classList.remove('active');
-            const target = dot.getAttribute('data-target');
-            if (target && document.getElementById(target) && current.includes(target.replace('-section', ''))) {
-                dot.classList.add('active');
-            }
-        });
-    });
+    // Store elements globally for unified scroll handler
+    window.scrollIndicator = scrollIndicator;
+    window.scrollDots = scrollDots;
+    window.scrollSections = sections;
 
     // Click to scroll to section
     scrollDots.forEach(dot => {
@@ -1491,19 +1482,8 @@ function initializeScrollProgress() {
     const progressBar = document.querySelector('.scroll-progress');
     if (!progressBar) return;
     
-    // Throttled scroll handler for better performance
-    const updateProgress = throttle(() => {
-        const scrollTop = window.pageYOffset;
-        const docHeight = document.body.scrollHeight - window.innerHeight;
-        const scrollPercent = Math.min((scrollTop / docHeight) * 100, 100);
-        
-        // Use requestAnimationFrame for smooth updates
-        requestAnimationFrame(() => {
-            progressBar.style.width = scrollPercent + '%';
-        });
-    }, 16); // ~60fps
-    
-    window.addEventListener('scroll', updateProgress, { passive: true });
+    // Store progress bar globally for unified scroll handler
+    window.scrollProgressBar = progressBar;
 }
 
 // Enhanced Loading Animation
@@ -1557,35 +1537,92 @@ function addScrollToTopButton() {
     scrollToTopBtn.addEventListener('click', scrollToTop);
     document.body.appendChild(scrollToTopBtn);
 
-    // Show/hide button based on scroll position
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 300) {
-            scrollToTopBtn.style.opacity = '1';
-            scrollToTopBtn.style.visibility = 'visible';
-        } else {
-            scrollToTopBtn.style.opacity = '0';
-            scrollToTopBtn.style.visibility = 'hidden';
-        }
-    });
+    // Store button globally for unified scroll handler
+    window.scrollToTopBtn = scrollToTopBtn;
 }
 
 // Background Music Player
 function initializeBackgroundMusic() {
     const backgroundAudio = new Audio('musik.mp3');
-    backgroundAudio.volume = 0.2; // Volume rendah
+    backgroundAudio.volume = 0.4; // Increased volume for better clarity
     backgroundAudio.loop = true;
+    backgroundAudio.preload = 'auto'; // Preload for better performance
     
-    // Play after user interaction (to avoid autoplay restrictions)
-    document.addEventListener('click', () => {
+    // Multiple user interaction triggers for mobile compatibility
+    const playAudio = () => {
         if (backgroundAudio.paused) {
             backgroundAudio.play().catch(e => {
                 // Background music autoplay blocked
             });
         }
-    }, { once: true });
+    };
+    
+    // Try multiple interaction events for better mobile support
+    document.addEventListener('click', playAudio, { once: true });
+    document.addEventListener('touchstart', playAudio, { once: true });
+    document.addEventListener('keydown', playAudio, { once: true });
     
     // Store audio globally for music player control
     window.backgroundAudio = backgroundAudio;
+}
+
+// Unified Scroll Handler
+function initializeUnifiedScrollHandler() {
+    // Throttled scroll handler for better performance
+    const handleScroll = throttle(() => {
+        const scrollY = window.scrollY;
+        
+        // Scroll Progress Bar
+        if (window.scrollProgressBar) {
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = Math.min((scrollY / docHeight) * 100, 100);
+            requestAnimationFrame(() => {
+                window.scrollProgressBar.style.width = scrollPercent + '%';
+            });
+        }
+        
+        // Scroll Indicator
+        if (window.scrollIndicator) {
+            if (scrollY > 100) {
+                window.scrollIndicator.classList.add('show');
+            } else {
+                window.scrollIndicator.classList.remove('show');
+            }
+            
+            // Update active dot
+            if (window.scrollSections && window.scrollDots) {
+                let current = '';
+                window.scrollSections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (scrollY >= (sectionTop - 200)) {
+                        current = section.getAttribute('id') || section.className;
+                    }
+                });
+
+                window.scrollDots.forEach(dot => {
+                    dot.classList.remove('active');
+                    const target = dot.getAttribute('data-target');
+                    if (target && document.getElementById(target) && current.includes(target.replace('-section', ''))) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+        
+        // Scroll to Top Button
+        if (window.scrollToTopBtn) {
+            if (scrollY > 300) {
+                window.scrollToTopBtn.style.opacity = '1';
+                window.scrollToTopBtn.style.visibility = 'visible';
+            } else {
+                window.scrollToTopBtn.style.opacity = '0';
+                window.scrollToTopBtn.style.visibility = 'hidden';
+            }
+        }
+    }, 16); // ~60fps
+    
+    // Add single scroll event listener
+    window.addEventListener('scroll', handleScroll, { passive: true });
 }
 
 // Initialize enhanced features
@@ -1596,4 +1633,5 @@ setTimeout(() => {
     createFloatingElements();
     addScrollToTopButton();
     initializeBackgroundMusic();
+    initializeUnifiedScrollHandler();
 }, 1000);
